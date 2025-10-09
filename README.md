@@ -1,2 +1,2 @@
 # Dalam Pengembangan Proyek SIP-KIB
-Please wwait
+Please wait
