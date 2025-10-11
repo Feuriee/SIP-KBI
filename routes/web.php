@@ -27,5 +27,9 @@ Route::prefix('karyawan')->group(function () {
     })->name('karyawan.kolam');
 });
 
+Route::get('/owner/dashboard', function () {
+    return Inertia::render('Owner/Dashboard');
+})->name('owner.dashboard');
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
