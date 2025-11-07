@@ -38,10 +38,23 @@
             <h2 class="text-xl font-semibold mb-4 text-center">Daftar Akun Baru</h2>
 
             @if ($errors->any())
-                <div class="mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                    <ul class="text-sm text-red-600 dark:text-red-400 list-disc list-inside">
+                <div class="mb-4 p-4 border border-red-300 bg-red-100/70 text-red-700 rounded-xl shadow-sm">
+                    <ul class="list-disc list-inside text-sm font-medium space-y-1">
                         @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
+                            <li>
+                                @switch($error)
+                                    @case('The email has already been taken.')
+                                        <span>Email sudah digunakan.</span>
+                                        @break
+
+                                    @case('The password field confirmation does not match.')
+                                        <span>Konfirmasi password tidak cocok.</span>
+                                        @break
+
+                                    @default
+                                        {{ $error }}
+                                @endswitch
+                            </li>
                         @endforeach
                     </ul>
                 </div>

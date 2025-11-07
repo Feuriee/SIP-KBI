@@ -39,15 +39,26 @@ class LoginRequest extends FormRequest
      */
     public function authenticate(): void
     {
-        $this->ensureIsNotRateLimited();
+            $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+            $credentials = $this->only('email', 'password');
 
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
-            ]);
-        }
+            // Cek apakah email terdaftar
+            $user = \App\Models\User::where('email', $credentials['email'])->first();
+            if (! $user) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'email' => 'Email tidak ditemukan.',
+                ]);
+            }
+
+            // Cek apakah password benar
+            if (! \Illuminate\Support\Facades\Auth::attempt($credentials, $this->boolean('remember'))) {
+                \Illuminate\Support\Facades\RateLimiter::hit($this->throttleKey());
+
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'password' => 'Password yang kamu masukkan salah.',
+                ]);
+    }
 
         RateLimiter::clear($this->throttleKey());
     }

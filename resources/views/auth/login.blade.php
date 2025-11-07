@@ -50,13 +50,20 @@
                     <label for="email" class="block text-sm mb-1">Email</label>
                     <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
                         class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-sipkbi-green focus:outline-none">
+                    @error('email')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="mb-4">
                     <label for="password" class="block text-sm mb-1">Password</label>
                     <input id="password" type="password" name="password" required
                         class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-sipkbi-green focus:outline-none">
+                    @error('password')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
+
 
                 <!-- Remember Me & Lupa Password -->
                 <div class="flex items-center justify-between mb-6">

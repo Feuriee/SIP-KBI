@@ -19,6 +19,23 @@
             }
         }
     </script>
+
+    <style>
+        /* Modal transition (halus) */
+        .modal-transition {
+            transition: opacity .18s ease, transform .18s ease;
+        }
+        .modal-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-6px) scale(.99);
+        }
+        .modal-visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+    </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition duration-500">
 
@@ -147,17 +164,113 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </button>
-                <h1 class="text-xl font-bold">Dashboard SIP-KBI</h1>
+                <h1 class="text-xl font-bold">Data Kolam</h1>
                 <div class="flex items-center space-x-3">
                     <span class="text-sm">{{ Auth::user()->name }}</span>
                 </div>
             </div>
 
-            <!-- Dashboard Section -->
+            <!-- Content Section -->
             <div class="p-6">
-                <h2 class="text-2xl font-bold mb-6">Dashboard Utama</h2>
+                <!-- Button Tambah -->
+                <div class="mb-6">
+                    <button onclick="openModal('add')" class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        <span>Tambah Kolam</span>
+                    </button>
+                </div>
+
+                <!-- Table -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-sipkbi-green text-white">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold uppercase">No</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Nama Kolam</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Lokasi</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Luas (m²)</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Kapasitas Ikan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Status</th>
+                                    <th class="px-6 py-3 text-center text-xs font-semibold uppercase">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body" class="divide-y divide-gray-200 dark:divide-gray-700">
+                                <!-- Data akan dimuat di sini -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </main>
+    </div>
+
+    <!-- Modal Form -->
+    <div id="modal-root" class="fixed inset-0 z-50 hidden">
+        <!-- overlay -->
+        <div id="modal-overlay" class="absolute inset-0 bg-black bg-opacity-50"></div>
+
+        <!-- modal dialog (centered) -->
+        <div id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"
+             class="modal-transition modal-hidden fixed inset-0 flex items-center justify-center p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 id="modal-title" class="text-2xl font-bold">Tambah Kolam</h2>
+                        <button id="modal-close-btn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" aria-label="Tutup modal">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <form id="kolam-form" class="space-y-4" novalidate>
+                        <input type="hidden" id="id_kolam">
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Nama Kolam</label>
+                            <input type="text" id="nama_kolam" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-sipkbi-green focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Lokasi</label>
+                            <input type="text" id="lokasi" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-sipkbi-green focus:border-transparent">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Luas (m²)</label>
+                                <input type="number" step="0.01" id="luas_m2" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-sipkbi-green focus:border-transparent">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Kapasitas Ikan</label>
+                                <input type="number" id="kapasitas_ikan" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-sipkbi-green focus:border-transparent">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Status</label>
+                            <select id="status" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-sipkbi-green focus:border-transparent">
+                                <option value="aktif">Aktif</option>
+                                <option value="nonaktif">Non-aktif</option>
+                            </select>
+                        </div>
+
+                        <div class="flex justify-end space-x-3 pt-4">
+                            <button type="button" id="modal-cancel-btn" class="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                                Batal
+                            </button>
+                            <button type="submit" class="px-6 py-2 bg-sipkbi-green hover:bg-sipkbi-dark text-white rounded-lg transition">
+                                Simpan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- JavaScript -->
@@ -166,23 +279,22 @@
         const toggle = document.getElementById('theme-toggle');
         const html = document.documentElement;
 
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            html.classList.add('dark');
-            toggle.textContent = '🌙';
-        } else {
-            html.classList.remove('dark');
-            toggle.textContent = '🌞';
+        if (toggle) {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                html.classList.add('dark');
+                toggle.textContent = '🌙';
+            } else {
+                html.classList.remove('dark');
+                toggle.textContent = '🌞';
+            }
+
+            toggle.addEventListener('click', () => {
+                html.classList.toggle('dark');
+                const isDark = html.classList.contains('dark');
+                toggle.textContent = isDark ? '🌙' : '🌞';
+                localStorage.theme = isDark ? 'dark' : 'light';
+            });
         }
-
-        toggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            const isDark = html.classList.contains('dark');
-            toggle.textContent = isDark ? '🌙' : '🌞';
-            localStorage.theme = isDark ? 'dark' : 'light';
-
-            // Update charts when theme changes
-            updateChartColors();
-        });
 
         // Mobile Sidebar Toggle
         const openSidebar = document.getElementById('open-sidebar');
@@ -190,21 +302,22 @@
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
 
-        openSidebar.addEventListener('click', () => {
-            sidebar.classList.remove('-translate-x-full');
-            overlay.classList.remove('hidden');
-        });
+        if (openSidebar && closeSidebar && sidebar && overlay) {
+            openSidebar.addEventListener('click', () => {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            });
 
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-        });
+            closeSidebar.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
 
-        overlay.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-        });
-
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+        }
     </script>
 </body>
 </html>
