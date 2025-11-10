@@ -156,6 +156,31 @@
             <!-- Dashboard Section -->
             <div class="p-6">
                 <h2 class="text-2xl font-bold mb-6">Dashboard Utama</h2>
+                            <h1 class="text-2xl font-bold mb-6">Dashboard SIP-KBI</h1>
+
+            <!-- Ringkasan -->
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+                <div class="bg-blue-500 text-white rounded-lg p-4 shadow">
+                    <h3 class="text-sm">Total Panen</h3>
+                    <p class="text-2xl font-bold">{{ $totalPanen }}</p>
+                </div>
+                <div class="bg-green-500 text-white rounded-lg p-4 shadow">
+                    <h3 class="text-sm">Total Penjualan</h3>
+                    <p class="text-2xl font-bold">Rp {{ number_format($totalPenjualan, 0, ',', '.') }}</p>
+                </div>
+                <div class="bg-indigo-500 text-white rounded-lg p-4 shadow">
+                    <h3 class="text-sm">Pendapatan</h3>
+                    <p class="text-2xl font-bold">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</p>
+                </div>
+                <div class="bg-red-500 text-white rounded-lg p-4 shadow">
+                    <h3 class="text-sm">Pengeluaran</h3>
+                    <p class="text-2xl font-bold">Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</p>
+                </div>
+                <div class="bg-emerald-500 text-white rounded-lg p-4 shadow">
+                    <h3 class="text-sm">Laba Bersih</h3>
+                    <p class="text-2xl font-bold">Rp {{ number_format($labaBersih, 0, ',', '.') }}</p>
+                </div>
+            </div>
             </div>
         </main>
     </div>

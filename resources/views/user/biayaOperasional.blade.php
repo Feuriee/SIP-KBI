@@ -403,7 +403,7 @@
             }
 
             tbody.innerHTML = data.map((item, index) => {
-                const bulanDate = new Date(item.bulan + '-01');
+                const bulanDate = new Date(item.bulan);
 
                 return `
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">

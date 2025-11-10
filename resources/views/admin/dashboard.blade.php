@@ -151,24 +151,60 @@
         <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
 
         <!-- Main Content -->
-        <main class="flex-1 lg:ml-64">
-            <!-- Top Bar -->
-            <div class="bg-white dark:bg-gray-800 shadow-sm p-4 flex items-center justify-between sticky top-0 z-30">
-                <button id="open-sidebar" class="lg:hidden">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-                <h1 class="text-xl font-bold">Dashboard SIP-KBI</h1>
-                <div class="flex items-center space-x-3">
-                    <span class="text-sm">{{ Auth::user()->name }}</span>
+        <main class="flex-1 lg:ml-64 p-6">
+            <h1 class="text-2xl font-bold mb-6">Dashboard SIP-KBI</h1>
+
+            <!-- Ringkasan -->
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+                <div class="bg-blue-500 text-white rounded-lg p-4 shadow">
+                    <h3 class="text-sm">Total Panen</h3>
+                    <p class="text-2xl font-bold">{{ $totalPanen }}</p>
+                </div>
+                <div class="bg-green-500 text-white rounded-lg p-4 shadow">
+                    <h3 class="text-sm">Total Penjualan</h3>
+                    <p class="text-2xl font-bold">Rp {{ number_format($totalPenjualan, 0, ',', '.') }}</p>
+                </div>
+                <div class="bg-indigo-500 text-white rounded-lg p-4 shadow">
+                    <h3 class="text-sm">Pendapatan</h3>
+                    <p class="text-2xl font-bold">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</p>
+                </div>
+                <div class="bg-red-500 text-white rounded-lg p-4 shadow">
+                    <h3 class="text-sm">Pengeluaran</h3>
+                    <p class="text-2xl font-bold">Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</p>
+                </div>
+                <div class="bg-emerald-500 text-white rounded-lg p-4 shadow">
+                    <h3 class="text-sm">Laba Bersih</h3>
+                    <p class="text-2xl font-bold">Rp {{ number_format($labaBersih, 0, ',', '.') }}</p>
                 </div>
             </div>
 
-            <!-- Dashboard Section -->
-            <div class="p-6">
-                <h2 class="text-2xl font-bold mb-6">Dashboard Utama</h2>
+            <!-- Filter Tahun -->
+            <div class="mb-6 flex items-center gap-4">
+                <label for="yearFilter" class="font-semibold text-gray-700 dark:text-gray-300">Pilih Tahun:</label>
+                <select 
+                    id="yearFilter" 
+                    class="p-2 border border-gray-300 dark:border-gray-600 rounded-md 
+                        focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 
+                        text-gray-900 dark:text-gray-100"
+                >
+                    @for ($i = date('Y'); $i >= 2020; $i--)
+                        <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
             </div>
+
+
+            <!-- Grafik Keuangan -->
+            <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+                <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Grafik Keuangan Bulanan</h2>
+                <canvas id="keuanganChart" height="100"></canvas>
+            </section>
+
+            <!-- Grafik Panen -->
+            <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Grafik Total Panen per Bulan</h2>
+                <canvas id="panenChart" height="100"></canvas>
+            </section>
         </main>
     </div>
 
@@ -218,5 +254,138 @@
         });
 
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const keuanganCtx = document.getElementById('keuanganChart').getContext('2d');
+            const panenCtx = document.getElementById('panenChart').getContext('2d');
+
+            let keuanganChart, panenChart;
+
+            const fetchKeuangan = (year) => {
+                fetch("{{ route('admin.dashboard.chart') }}?year=" + year)
+                    .then(res => res.json())
+                    .then(data => {
+                        const labels = data.map(d => 'Bulan ' + d.bulan);
+                        const pendapatan = data.map(d => d.pendapatan);
+                        const pengeluaran = data.map(d => d.pengeluaran);
+                        const laba = data.map(d => d.laba);
+
+                        if (keuanganChart) keuanganChart.destroy();
+
+                        keuanganChart = new Chart(keuanganCtx, {
+                            type: 'line',
+                            data: {
+                                labels,
+                                datasets: [
+                                    {
+                                        label: 'Pendapatan',
+                                        data: pendapatan,
+                                        borderColor: '#16a34a',
+                                        backgroundColor: 'rgba(22, 163, 74, 0.2)',
+                                        tension: 0.3
+                                    },
+                                    {
+                                        label: 'Pengeluaran',
+                                        data: pengeluaran,
+                                        borderColor: '#dc2626',
+                                        backgroundColor: 'rgba(220, 38, 38, 0.2)',
+                                        tension: 0.3
+                                    },
+                                    {
+                                        label: 'Laba Bersih',
+                                        data: laba,
+                                        borderColor: '#2563eb',
+                                        backgroundColor: 'rgba(37, 99, 235, 0.2)',
+                                        tension: 0.3
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        labels: {
+                                            color: getComputedStyle(document.documentElement).getPropertyValue('--tw-text-opacity') || '#000'
+                                        }
+                                    }
+                                },
+                                scales: {
+                                    x: {
+                                        ticks: { color: '#374151' },
+                                        grid: { color: '#e5e7eb' }
+                                    },
+                                    y: {
+                                        ticks: { color: '#374151' },
+                                        grid: { color: '#e5e7eb' }
+                                    }
+                                }
+                            }
+                        });
+                    });
+            };
+
+            const fetchPanen = (year) => {
+                fetch("{{ route('admin.dashboard.panen') }}?year=" + year)
+                    .then(res => res.json())
+                    .then(data => {
+                        const labels = data.map(d => 'Bulan ' + d.bulan);
+                        const panen = data.map(d => d.total_panen);
+
+                        if (panenChart) panenChart.destroy();
+
+                        panenChart = new Chart(panenCtx, {
+                            type: 'line',
+                            data: {
+                                labels,
+                                datasets: [
+                                    {
+                                        label: 'Total Panen (kg)',
+                                        data: panen,
+                                        borderColor: '#f59e0b',
+                                        backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                                        tension: 0.3
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        labels: {
+                                            color: getComputedStyle(document.documentElement).getPropertyValue('--tw-text-opacity') || '#000'
+                                        }
+                                    }
+                                },
+                                scales: {
+                                    x: {
+                                        ticks: { color: '#374151' },
+                                        grid: { color: '#e5e7eb' }
+                                    },
+                                    y: {
+                                        ticks: { color: '#374151' },
+                                        grid: { color: '#e5e7eb' }
+                                    }
+                                }
+                            }
+                        });
+                    });
+            };
+
+            // Trigger saat memilih tahun
+            const yearSelect = document.getElementById('yearFilter');
+            const loadCharts = () => {
+                const year = yearSelect.value;
+                fetchKeuangan(year);
+                fetchPanen(year);
+            };
+
+            yearSelect.addEventListener('change', loadCharts);
+
+            // Load default tahun sekarang
+            loadCharts();
+        });
+        </script>
+
 </body>
 </html>

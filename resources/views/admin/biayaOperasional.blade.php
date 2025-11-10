@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biaya Operasional | SIP-KBI</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
@@ -222,7 +223,7 @@
 
                             <div>
                                 <label class="block text-sm font-medium mb-2">Bulan</label>
-                                <input type="month" id="bulan" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-sipkbi-green focus:border-transparent">
+                                <input type="date" id="bulan" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-sipkbi-green focus:border-transparent">
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -414,7 +415,7 @@
             }
 
             tbody.innerHTML = data.map((item, index) => {
-                const bulanDate = new Date(item.bulan + '-01');
+                const bulanDate = new Date(item.bulan);
 
                 return `
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">

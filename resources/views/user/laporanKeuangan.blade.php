@@ -390,7 +390,7 @@
             }
 
             tbody.innerHTML = data.map((item, index) => {
-                const bulanDate = new Date(item.bulan + '-01');
+                const bulanDate = new Date(item.bulan);
                 const labaBersih = parseFloat(item.laba_bersih);
                 const isProfit = labaBersih >= 0;
 

@@ -74,6 +74,11 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
         return view('admin.panen');
     })->name('panen');
 
+    //Grafh route
+    Route::get('dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('dashboard.chart');
+    Route::get('dashboard/panen-chart', [DashboardController::class, 'getPanenChart'])->name('dashboard.panen');
+
+
     // SDM Routes
     Route::get('/pegawai', function () {
         return view('admin.pegawai');
