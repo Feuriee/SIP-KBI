@@ -167,20 +167,57 @@
         </div>
       </div>
 
-      <!-- Content Section -->
-      <div class="p-6">
-        <!-- Button Tambah -->
-        <div class="mb-6">
-          <button onclick="openModal('add')" class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            <span>Tambah Laporan</span>
-          </button>
+        <!-- Content Section -->
+        <div class="flex justify-between items-center p-6">
+
+          <!-- Button Tambah -->
+                <button onclick="openModal('add')" 
+                    class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span>Tambah Laporan</span>
+                </button>
+
+                <!-- Filter Bar -->
+                <div class="flex items-center gap-3">
+
+                    <label class="text-sm text-gray-400 dark:text-gray-300">
+                        Filter Bulan
+                    </label>
+
+                    <select id="month-filter"
+                        class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10 focus:outline-none focus:ring-2 focus:ring-sipkbi-green bg-white dark:bg-gray-700">
+                        <option value="">Semua Bulan</option>
+                        <option value="01">Januari</option>
+                        <option value="02">Februari</option>
+                        <option value="03">Maret</option>
+                        <option value="04">April</option>
+                        <option value="05">Mei</option>
+                        <option value="06">Juni</option>
+                        <option value="07">Juli</option>
+                        <option value="08">Agustus</option>
+                        <option value="09">September</option>
+                        <option value="10">Oktober</option>
+                        <option value="11">November</option>
+                        <option value="12">Desember</option>
+                    </select>
+
+                    <button onclick="applyFilters()"
+                        class="bg-sipkbi-green text-white px-4 h-10 rounded-lg hover:bg-sipkbi-dark transition flex items-center">
+                        Cari
+                    </button>
+
+                    <button onclick="resetFilters()"
+                        class="bg-gray-500 text-white px-4 h-10 rounded-lg hover:bg-gray-600 transition flex items-center">
+                        Reset
+                    </button>
+
+                </div>
         </div>
 
         <!-- Table -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden mr-6 ml-6">
           <div class="overflow-x-auto">
             <table class="w-full">
               <thead class="bg-sipkbi-green text-white">

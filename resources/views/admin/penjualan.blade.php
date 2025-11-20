@@ -168,20 +168,61 @@
                 </div>
             </div>
 
-            <!-- Content Section -->
-            <div class="p-6">
+<!-- Content Section -->
+            <div class="flex justify-between items-center p-6">
+
                 <!-- Button Tambah -->
-                <div class="mb-6">
-                    <button onclick="openModal('add')" class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        <span>Tambah Penjualan</span>
+                <button onclick="openModal('add')" 
+                    class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span>Tambah Biaya</span>
+                </button>
+
+                <!-- Right Controls -->
+                <div class="flex items-center gap-3">
+
+                    <!-- Search -->
+                    <input 
+                        type="text" 
+                        id="search-input"
+                        placeholder="Cari nama pembeli..."
+                        class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10 w-48 focus:outline-none focus:ring-2 focus:ring-sipkbi-green bg-white dark:bg-gray-700"
+                    >
+
+                    <!-- Filter Metode Bayar -->
+                    <select id="method-filter"
+                        class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10 focus:outline-none bg-white dark:bg-gray-700">
+                        <option value="">Metode Bayar</option>
+                        <option value="tunai">Tunai</option>
+                        <option value="transfer">Transfer</option>
+                    </select>
+
+                    <!-- Filter Total (Rp) -->
+                    <select id="total-filter"
+                        class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10 focus:outline-none bg-white dark:bg-gray-700">
+                        <option value="">Total (Rp)</option>
+                        <option value="high">Tertinggi</option>
+                        <option value="low">Terendah</option>
+                    </select>
+
+                    <!-- Tombol Cari -->
+                    <button onclick="applyFilters()"
+                        class="bg-sipkbi-green text-white px-4 h-10 rounded-lg hover:bg-sipkbi-dark transition flex items-center">
+                        Cari
+                    </button>
+
+                    <!-- Tombol Reset -->
+                    <button onclick="resetFilters()"
+                        class="bg-gray-500 text-white px-4 h-10 rounded-lg hover:bg-gray-600 transition flex items-center">
+                        Reset
                     </button>
                 </div>
+            </div>
 
                 <!-- Table -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden mr-6 ml-6">
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead class="bg-sipkbi-green text-white">

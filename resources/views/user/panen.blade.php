@@ -104,23 +104,6 @@
                             Panen
                         </a>
                     </div>
-
-                    <div class="mt-4">
-                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase px-4 mb-2">SDM</p>
-                        <a href="{{ route('user.pegawai') }}" class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('user.pegawai') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                            </svg>
-                            Pegawai
-                        </a>
-                        <a href="{{ route('user.gaji') }}" class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('user.gaji') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                            </svg>
-                            Gaji Karyawan
-                        </a>
-                    </div>
-                </nav>
             </div>
 
             <div class="p-5 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
@@ -129,7 +112,9 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="text-red-500 hover:underline text-sm">
-                        Keluar
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12" />
+                        </svg>
                     </button>
                 </form>
             </div>
@@ -156,19 +141,89 @@
             </div>
 
             <!-- Content Section -->
-            <div class="p-6">
-                <!-- Button Tambah -->
-                <div class="mb-6">
-                    <button onclick="openModal('add')" class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        <span>Tambah Panen</span>
-                    </button>
+                <div class="p-6">
+
+                    <!-- Header Controls (Tambah + Search + Filter) -->
+                    <div class="flex justify-between flex-wrap items-center gap-4">
+
+                        <!-- Button Tambah -->
+                        <button onclick="openModal('add')" 
+                            class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            <span>Tambah Panen</span>
+                        </button>
+
+                        <!-- Search & Filter Controls -->
+                        <div class="flex flex-wrap items-center gap-3">
+
+                            <!-- Search Input -->
+                            <input 
+                                type="text" 
+                                id="search-input"
+                                placeholder="Cari nama kolam atau jenis ikan..." 
+                                class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10 w-64 
+                                    bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-sipkbi-green"
+                            >
+
+                            <!-- Filter Pendapatan -->
+                            <select 
+                                id="filter-pendapatan"
+                                class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10 
+                                    bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-sipkbi-green"
+                            >
+                                <option value="">Semua Pendapatan</option>
+                                <option value="high">Tertinggi</option>
+                                <option value="low">Terendah</option>
+                            </select>
+
+                            <!-- Filter Total Panen KG -->
+                            <select 
+                                id="filter-berat"
+                                class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10 
+                                    bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-sipkbi-green"
+                            >
+                                <option value="">Total Panen (KG)</option>
+                                <option value="high">Terberat</option>
+                                <option value="low">Terendah</option>
+                            </select>
+
+                            <!-- Search Button -->
+                            <button 
+                                onclick="applyFilters()"
+                                class="bg-sipkbi-green text-white px-4 h-10 rounded-lg hover:bg-sipkbi-dark transition flex items-center gap-2"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" 
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                                Cari
+                            </button>
+
+                            <!-- Reset Button -->
+                            <button 
+                                onclick="resetFilters()"
+                                class="bg-gray-500 text-white px-4 h-10 rounded-lg hover:bg-gray-600 transition flex items-center gap-2"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" 
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                Reset
+                            </button>
+
+                        </div>
+                    </div>
                 </div>
 
+
+
                 <!-- Table -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden ml-6 mr-6">
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead class="bg-sipkbi-green text-white">

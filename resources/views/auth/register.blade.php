@@ -75,15 +75,8 @@
                         class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-sipkbi-green focus:outline-none">
                 </div>
 
-                <!-- ✅ TAMBAHAN: Pilihan Role -->
-                <div class="mb-4">
-                    <label for="role" class="block text-sm mb-1">Daftar Sebagai</label>
-                    <select id="role" name="role" required
-                        class="w-full px-3 py-2 border rounded-lg bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-sipkbi-green focus:outline-none">
-                        <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User</option>
-                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                    </select>
-                </div>
+                <!-- Pilihan Role : Default USER -->
+                <input type="hidden" name="role" value="user">
 
                 <div class="mb-4">
                     <label for="password" class="block text-sm mb-1">Password</label>

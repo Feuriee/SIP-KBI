@@ -169,16 +169,76 @@
                 </div>
                 </div>
 
-            <!-- Content Section -->
-            <div class="p-6">
-                <!-- Button Tambah -->
-                <div class="mb-6">
-                    <button onclick="openModal('add')" class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        <span>Tambah Jadwal</span>
-                    </button>
+                <!-- Content Section -->
+                <div class="p-6">
+
+                    <!-- Top Row: Tambah + Search & Filter -->
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+
+                        <!-- Button Tambah -->
+                        <button onclick="openModal('add')" 
+                            class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            <span>Tambah Jadwal</span>
+                        </button>
+
+                        <!-- Search + Filter Controls (Right Group) -->
+                        <div class="flex flex-wrap items-center gap-2">
+
+                            <!-- Search Input -->
+                            <input 
+                                type="text" 
+                                id="search-input"
+                                placeholder="Cari nama pakan atau nama kolam..." 
+                                class="border border-gray-300 dark:border-gray-600 rounded-lg 
+                                    px-3 py-2 w-80 bg-white dark:bg-gray-700
+                                    focus:outline-none focus:ring-2 focus:ring-sipkbi-green"
+                            >
+
+                            <!-- Filter Status -->
+                            <select 
+                                id="status-filter"
+                                class="border border-gray-300 dark:border-gray-600 rounded-lg 
+                                    px-3 py-2 bg-white dark:bg-gray-700
+                                    focus:outline-none focus:ring-2 focus:ring-sipkbi-green"
+                            >
+                                <option value="">Semua Berat</option>
+                                <option value="aktif">Terberat</option>
+                                <option value="nonaktif">Ringan</option>
+                            </select>
+
+                            <!-- Search Button -->
+                            <button 
+                                onclick="applyFilters()"
+                                class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 
+                                    rounded-lg flex items-center gap-2 transition"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" 
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                                Cari
+                            </button>
+
+                            <!-- Reset Button -->
+                            <button 
+                                onclick="resetFilters()"
+                                class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 
+                                    rounded-lg flex items-center gap-2 transition"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" 
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                Reset
+                            </button>
+
+                        </div>
                 </div>
 
                 <!-- Table -->

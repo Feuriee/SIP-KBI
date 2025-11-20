@@ -171,14 +171,85 @@
 
             <!-- Content Section -->
             <div class="p-6">
-                <!-- Button Tambah -->
-                <div class="mb-6">
-                    <button onclick="openModal('add')" class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
+
+                <!-- Bagian Atas: Tombol Tambah + Search & Filter -->
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+
+                    <!-- Button Tambah -->
+                    <button onclick="openModal('add')" 
+                        class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                d="M12 4v16m8-8H4"></path>
                         </svg>
                         <span>Tambah Pakan</span>
                     </button>
+
+                    <!-- Search + Filter -->
+                    <div class="flex flex-wrap items-center gap-2">
+
+                        <!-- Search Input -->
+                        <input 
+                            type="text" 
+                            id="search-input"
+                            placeholder="Cari nama pakan, supplier atau jenis pakan..." 
+                            class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 w-80
+                                focus:outline-none focus:ring-2 focus:ring-sipkbi-green 
+                                bg-white dark:bg-gray-700"
+                        >
+
+                        <!-- Filter Metode Bayar -->
+                        <select 
+                            id="metode-filter"
+                            class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2
+                                focus:outline-none focus:ring-2 focus:ring-sipkbi-green 
+                                bg-white dark:bg-gray-700"
+                        >
+                            <option value="">Metode Bayar</option>
+                            <option value="tunai">Tunai</option>
+                            <option value="transfer">Transfer</option>
+                        </select>
+
+                        <!-- Filter Harga -->
+                        <select 
+                            id="harga-filter"
+                            class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2
+                                focus:outline-none focus:ring-2 focus:ring-sipkbi-green 
+                                bg-white dark:bg-gray-700"
+                        >
+                            <option value="">Harga</option>
+                            <option value="tertinggi">Tertinggi</option>
+                            <option value="terendah">Terendah</option>
+                        </select>
+
+                        <!-- Tombol Cari -->
+                        <button 
+                            onclick="applyFilters()"
+                            class="bg-sipkbi-green text-white px-4 py-2 rounded-lg hover:bg-sipkbi-dark 
+                                transition flex items-center gap-2"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" 
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            Cari
+                        </button>
+
+                        <!-- Reset -->
+                        <button 
+                            onclick="resetFilters()"
+                            class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 
+                                transition flex items-center gap-2"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" 
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Reset
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Table -->

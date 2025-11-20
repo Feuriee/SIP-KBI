@@ -166,15 +166,77 @@
                 </div>
             </div>
 
+            <!-- Content Section -->
             <div class="p-6">
-                <div class="mb-6">
-                    <button onclick="openModal('add')" class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
+
+                <!-- Header Controls (Tambah + Search + Filter) -->
+                <div class="flex justify-between items-center">
+
+                    <!-- Button Tambah -->
+                    <button onclick="openModal('add')" 
+                        class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
                         <span>Tambah Jenis Ikan</span>
                     </button>
+
+                    <!-- Search & Filter Controls -->
+                    <div class="flex items-center gap-3">
+
+                        <!-- Search Input -->
+                        <input 
+                            type="text" 
+                            id="search-input"
+                            placeholder="Cari nama ikan atau masa panen..." 
+                            class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10 w-80 focus:outline-none focus:ring-2 focus:ring-sipkbi-green bg-white dark:bg-gray-700"
+                        >
+
+                        <!-- Filter Harga -->
+                        <select 
+                            id="filter-harga"
+                            class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10 focus:outline-none focus:ring-2 focus:ring-sipkbi-green bg-white dark:bg-gray-700"
+                        >
+                            <option value="">Semua Harga</option>
+                            <option value="termahal">Termahal</option>
+                            <option value="termurah">Termurah</option>
+                        </select>
+
+                        <!-- Filter Berat -->
+                        <select 
+                            id="filter-berat"
+                            class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10 focus:outline-none focus:ring-2 focus:ring-sipkbi-green bg-white dark:bg-gray-700"
+                        >
+                            <option value="">Semua Berat</option>
+                            <option value="terbesar">Terbesar</option>
+                            <option value="terkecil">Terkecil</option>
+                        </select>
+
+                        <!-- Search Button -->
+                        <button 
+                            onclick="applyFilters()"
+                            class="bg-sipkbi-green text-white px-4 h-10 rounded-lg hover:bg-sipkbi-dark transition flex items-center gap-2"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            Cari
+                        </button>
+
+                        <!-- Reset Button -->
+                        <button 
+                            onclick="resetFilters()"
+                            class="bg-gray-500 text-white px-4 h-10 rounded-lg hover:bg-gray-600 transition flex items-center gap-2"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Reset
+                        </button>
+
+                    </div>
                 </div>
+            </div>
 
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
                     <div class="overflow-x-auto">
