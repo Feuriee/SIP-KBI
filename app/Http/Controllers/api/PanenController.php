@@ -11,10 +11,64 @@ use Illuminate\Support\Facades\Log;
 
 class PanenController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $panen = Panen::with(['kolam', 'jenisIkan'])->orderBy('tanggal_panen', 'desc')->get();
+            $query = Panen::with(['kolam', 'jenisIkan']);
+
+            // Filter berdasarkan pencarian (kolam atau jenis ikan)
+            if ($request->has('search') && !empty($request->search)) {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->whereHas('kolam', function($subQ) use ($search) {
+                        $subQ->where('nama_kolam', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('jenisIkan', function($subQ) use ($search) {
+                        $subQ->where('nama_ikan', 'like', '%' . $search . '%');
+                    });
+                });
+            }
+
+            // Variable untuk track apakah ada sorting
+            $hasSorting = false;
+
+            // Filter berdasarkan pendapatan
+            if ($request->has('filter_pendapatan') && !empty($request->filter_pendapatan)) {
+                if ($request->filter_pendapatan === 'high') {
+                    $query->orderBy('total_pendapatan', 'desc');
+                    $hasSorting = true;
+                } elseif ($request->filter_pendapatan === 'low') {
+                    $query->orderBy('total_pendapatan', 'asc');
+                    $hasSorting = true;
+                }
+            }
+
+            // Filter berdasarkan berat total (hanya jika tidak ada filter pendapatan)
+            if (!$hasSorting && $request->has('filter_berat') && !empty($request->filter_berat)) {
+                if ($request->filter_berat === 'high') {
+                    $query->orderBy('berat_total_kg', 'desc');
+                    $hasSorting = true;
+                } elseif ($request->filter_berat === 'low') {
+                    $query->orderBy('berat_total_kg', 'asc');
+                    $hasSorting = true;
+                }
+            }
+
+            // Filter berdasarkan tanggal (opsional)
+            if ($request->has('tanggal_mulai') && !empty($request->tanggal_mulai)) {
+                $query->where('tanggal_panen', '>=', $request->tanggal_mulai);
+            }
+
+            if ($request->has('tanggal_akhir') && !empty($request->tanggal_akhir)) {
+                $query->where('tanggal_panen', '<=', $request->tanggal_akhir);
+            }
+
+            // Jika tidak ada sorting khusus, urutkan berdasarkan tanggal terbaru
+            if (!$hasSorting) {
+                $query->orderBy('tanggal_panen', 'desc');
+            }
+
+            $panen = $query->get();
 
             return response()->json([
                 'success' => true,

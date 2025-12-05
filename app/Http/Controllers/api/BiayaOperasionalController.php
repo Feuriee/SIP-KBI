@@ -9,15 +9,75 @@ use Illuminate\Support\Facades\Log;
 
 class BiayaOperasionalController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $biayaOperasional = BiayaOperasional::orderBy('bulan', 'desc')->get();
+            $query = BiayaOperasional::query();
+
+            // Search parameter (untuk bulan atau tahun)
+            if ($request->has('search') && !empty($request->search)) {
+                $search = $request->search;
+
+                // Ambil semua data dulu
+                $allData = BiayaOperasional::all();
+
+                // Filter di PHP
+                $filteredData = $allData->filter(function($item) use ($search) {
+                    $bulanDate = new \DateTime($item->bulan);
+                    $tahun = $bulanDate->format('Y');
+                    $bulanAngka = $bulanDate->format('m');
+
+                    // Nama bulan dalam bahasa Indonesia
+                    $namaBulan = [
+                        '01' => 'Januari', '02' => 'Februari', '03' => 'Maret',
+                        '04' => 'April', '05' => 'Mei', '06' => 'Juni',
+                        '07' => 'Juli', '08' => 'Agustus', '09' => 'September',
+                        '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
+                    ];
+
+                    $bulanIndonesia = $namaBulan[$bulanAngka];
+
+                    // Cek apakah search cocok dengan tahun atau nama bulan
+                    return stripos($tahun, $search) !== false ||
+                           stripos($bulanIndonesia, $search) !== false ||
+                           stripos($item->bulan, $search) !== false;
+                });
+
+                // Convert ke array untuk sorting
+                $data = $filteredData->values();
+
+            } else {
+                // Filter bulan jika ada
+                if ($request->has('bulan') && !empty($request->bulan)) {
+                    $bulan = $request->bulan;
+                    $query->whereMonth('bulan', $bulan);
+                }
+
+                $data = $query->get();
+            }
+
+            // Sorting berdasarkan filter_biaya
+            if ($request->has('filter_biaya') && !empty($request->filter_biaya)) {
+                switch ($request->filter_biaya) {
+                    case 'tertinggi':
+                        $data = $data->sortByDesc('total_biaya')->values();
+                        break;
+                    case 'terendah':
+                        $data = $data->sortBy('total_biaya')->values();
+                        break;
+                    default:
+                        $data = $data->sortByDesc('bulan')->values();
+                        break;
+                }
+            } else {
+                // Default order by bulan desc
+                $data = $data->sortByDesc('bulan')->values();
+            }
 
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil dimuat',
-                'data' => $biayaOperasional
+                'data' => $data
             ], 200);
 
         } catch (\Exception $e) {
@@ -25,7 +85,8 @@ class BiayaOperasionalController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal memuat data: ' . $e->getMessage()
+                'message' => 'Gagal memuat data: ' . $e->getMessage(),
+                'error' => $e->getMessage()
             ], 500);
         }
     }
@@ -34,7 +95,7 @@ class BiayaOperasionalController extends Controller
     {
         try {
             $validated = $request->validate([
-                'bulan' => 'required|date', // ✅ BENAR
+                'bulan' => 'required|date',
                 'listrik' => 'required|numeric|min:0',
                 'air' => 'required|numeric|min:0',
                 'transportasi' => 'required|numeric|min:0',

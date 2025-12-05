@@ -10,10 +10,19 @@ class JadwalPakan extends Model
     use HasFactory;
 
     protected $table = 'jadwal_pakan';
+
     protected $fillable = [
-        'kolam_id', 'nama_kolam', 'pakan_id', 'tanggal', 'jumlah_kg', 'catatan'
+        'kolam_id',
+        'pakan_id',
+        'tanggal',
+        'jumlah_kg',
+        'catatan'
     ];
 
+    protected $casts = [
+        'tanggal' => 'date',
+        'jumlah_kg' => 'decimal:2'
+    ];
     public function kolam()
     {
         return $this->belongsTo(Kolam::class, 'kolam_id');
@@ -22,5 +31,15 @@ class JadwalPakan extends Model
     public function pakan()
     {
         return $this->belongsTo(Pakan::class, 'pakan_id');
+    }
+
+    public function getNamaKolamAttribute()
+    {
+        return $this->kolam ? $this->kolam->nama_kolam : null;
+    }
+
+    public function getNamaPakanAttribute()
+    {
+        return $this->pakan ? $this->pakan->nama_pakan : null;
     }
 }

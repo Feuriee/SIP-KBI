@@ -9,10 +9,97 @@ use Illuminate\Support\Facades\Log;
 
 class LaporanKeuanganController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $laporanKeuangan = LaporanKeuangan::orderBy('bulan', 'desc')->get();
+            $query = LaporanKeuangan::query();
+
+            // Filter berdasarkan bulan (exact match atau partial)
+            if ($request->has('bulan') && !empty($request->bulan)) {
+                $bulanFilter = $request->bulan;
+
+                // Jika format bulan adalah MM (2 digit), cari semua tahun dengan bulan tersebut
+                if (strlen($bulanFilter) === 2) {
+                    $query->whereRaw('MONTH(bulan) = ?', [$bulanFilter]);
+                }
+                // Jika format YYYY-MM, cari exact match
+                else {
+                    $query->whereRaw('DATE_FORMAT(bulan, "%Y-%m") = ?', [$bulanFilter]);
+                }
+            }
+
+            // Search berdasarkan bulan atau tahun (text search)
+            if ($request->has('search') && !empty($request->search)) {
+                $searchTerm = $request->search;
+
+                // Array nama bulan dalam bahasa Indonesia
+                $bulanIndo = [
+                    'januari' => '01', 'februari' => '02', 'maret' => '03',
+                    'april' => '04', 'mei' => '05', 'juni' => '06',
+                    'juli' => '07', 'agustus' => '08', 'september' => '09',
+                    'oktober' => '10', 'november' => '11', 'desember' => '12'
+                ];
+
+                // Cek apakah search adalah nama bulan
+                $searchLower = strtolower($searchTerm);
+                $bulanNumber = null;
+
+                foreach ($bulanIndo as $namaBulan => $nomorBulan) {
+                    if (strpos($namaBulan, $searchLower) === 0) {
+                        $bulanNumber = $nomorBulan;
+                        break;
+                    }
+                }
+
+                if ($bulanNumber) {
+                    // Jika search adalah nama bulan, cari berdasarkan bulan
+                    $query->whereRaw('MONTH(bulan) = ?', [$bulanNumber]);
+                } elseif (is_numeric($searchTerm) && strlen($searchTerm) === 4) {
+                    // Jika search adalah tahun (4 digit)
+                    $query->whereRaw('YEAR(bulan) = ?', [$searchTerm]);
+                } elseif (is_numeric($searchTerm) && strlen($searchTerm) <= 2) {
+                    // Jika search adalah bulan (1-2 digit)
+                    $query->whereRaw('MONTH(bulan) = ?', [$searchTerm]);
+                } else {
+                    // Search di catatan jika bukan bulan/tahun
+                    $query->where('catatan', 'like', '%' . $searchTerm . '%');
+                }
+            }
+
+            // Variable untuk track apakah ada sorting
+            $hasSorting = false;
+
+            // Filter berdasarkan laba (untung/rugi/tertinggi/terendah)
+            if ($request->has('filter_laba') && !empty($request->filter_laba)) {
+                $filterLaba = $request->filter_laba;
+
+                switch ($filterLaba) {
+                    case 'tertinggi':
+                        $query->orderBy('laba_bersih', 'desc');
+                        $hasSorting = true;
+                        break;
+
+                    case 'terendah':
+                        $query->orderBy('laba_bersih', 'asc');
+                        $hasSorting = true;
+                        break;
+
+                    case 'untung':
+                        $query->where('laba_bersih', '>=', 0);
+                        break;
+
+                    case 'rugi':
+                        $query->where('laba_bersih', '<', 0);
+                        break;
+                }
+            }
+
+            // Jika tidak ada sorting khusus, urutkan berdasarkan bulan terbaru
+            if (!$hasSorting) {
+                $query->orderBy('bulan', 'desc');
+            }
+
+            $laporanKeuangan = $query->get();
 
             return response()->json([
                 'success' => true,

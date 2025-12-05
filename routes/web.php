@@ -36,6 +36,10 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
 
+    // ⚠️ PERBAIKAN: Graph routes dipindahkan ke sini dan menggunakan AdminDashboard
+    Route::get('/dashboard/chart-data', [AdminDashboard::class, 'getChartData'])->name('dashboard.chart');
+    Route::get('/dashboard/panen-chart', [AdminDashboard::class, 'getPanenChart'])->name('dashboard.panen');
+
     // Keuangan Routes
     Route::get('/keuangan', function () {
         return view('admin.laporanKeuangan');
@@ -73,11 +77,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/panen', function () {
         return view('admin.panen');
     })->name('panen');
-
-    //Grafh route
-    Route::get('dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('dashboard.chart');
-    Route::get('dashboard/panen-chart', [DashboardController::class, 'getPanenChart'])->name('dashboard.panen');
-
 
     // SDM Routes
     Route::get('/pegawai', function () {
@@ -191,7 +190,7 @@ Route::middleware(['auth', 'verified'])->prefix('api')->group(function () {
     Route::post('/penjualan', [PenjualanController::class, 'store']);
     Route::get('/penjualan/{penjualan}', [PenjualanController::class, 'show']);
     Route::put('/penjualan/{penjualan}', [PenjualanController::class, 'update']);
-    Route::delete('/penjualan/{penjualan}', [PenjualanController::class, 'destroy']);
+    Route::delete('/penjualan/{penjualan}', [Penjualan::class, 'destroy']);
 
     // Pengeluaran API
     Route::get('/pengeluaran', [PengeluaranController::class, 'index']);

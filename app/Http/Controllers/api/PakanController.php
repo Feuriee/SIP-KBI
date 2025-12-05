@@ -9,15 +9,71 @@ use Illuminate\Support\Facades\Log;
 
 class PakanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $pakan = Pakan::all();
+            $query = Pakan::query();
+
+            // Fitur search berdasarkan nama pakan, jenis pakan, atau supplier
+            if ($request->has('search') && !empty($request->search)) {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('nama_pakan', 'like', "%{$search}%")
+                      ->orWhere('jenis_pakan', 'like', "%{$search}%")
+                      ->orWhere('supplier', 'like', "%{$search}%");
+                });
+            }
+
+            // Filter berdasarkan jenis pakan
+            if ($request->has('jenis_pakan') && !empty($request->jenis_pakan)) {
+                $query->where('jenis_pakan', $request->jenis_pakan);
+            }
+
+            // Filter berdasarkan supplier
+            if ($request->has('supplier') && !empty($request->supplier)) {
+                $query->where('supplier', $request->supplier);
+            }
+
+            // Filter berdasarkan range harga
+            if ($request->has('harga_min') && !empty($request->harga_min)) {
+                $query->where('harga_per_kg', '>=', $request->harga_min);
+            }
+            if ($request->has('harga_max') && !empty($request->harga_max)) {
+                $query->where('harga_per_kg', '<=', $request->harga_max);
+            }
+
+            // Filter berdasarkan stok
+            if ($request->has('stok_min') && !empty($request->stok_min)) {
+                $query->where('stok_kg', '>=', $request->stok_min);
+            }
+
+            // Sorting/ordering
+            $sortBy = $request->input('sort_by', 'id'); // default: id
+            $sortOrder = $request->input('sort_order', 'desc'); // default: descending
+
+            // Validasi sort_by untuk keamanan
+            $allowedSortFields = ['id', 'nama_pakan', 'harga_per_kg', 'stok_kg', 'created_at'];
+            if (!in_array($sortBy, $allowedSortFields)) {
+                $sortBy = 'id';
+            }
+
+            // Validasi sort_order
+            $sortOrder = in_array(strtolower($sortOrder), ['asc', 'desc']) ? strtolower($sortOrder) : 'desc';
+
+            $pakan = $query->orderBy($sortBy, $sortOrder)->get();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil dimuat',
-                'data' => $pakan
+                'data' => $pakan,
+                'total' => $pakan->count(),
+                'filters' => [
+                    'search' => $request->search,
+                    'jenis_pakan' => $request->jenis_pakan,
+                    'supplier' => $request->supplier,
+                    'sort_by' => $sortBy,
+                    'sort_order' => $sortOrder
+                ]
             ], 200);
 
         } catch (\Exception $e) {

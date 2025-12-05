@@ -14,43 +14,40 @@ class KolamController extends Controller
         try {
             $query = Kolam::query();
 
-            // Perbaikan fitur search dengan grouping WHERE
-            if ($request->has('search') && !empty($request->search)) {
+            // Search
+            if ($request->has('search') && $request->search != '') {
                 $search = $request->search;
                 $query->where(function($q) use ($search) {
-                    $q->where('nama_kolam', 'like', "%{$search}%")
-                      ->orWhere('lokasi', 'like', "%{$search}%")
-                      ->orWhere('status', 'like', "%{$search}%");
+                    $q->where('nama_kolam', 'like', '%' . $search . '%')
+                      ->orWhere('lokasi', 'like', '%' . $search . '%');
                 });
             }
 
-            // Filter berdasarkan status jika ada
-            if ($request->has('status') && !empty($request->status)) {
+            // Filter by status
+            if ($request->has('status') && $request->status != '') {
                 $query->where('status', $request->status);
             }
 
-            $kolam = $query->orderBy('id', 'desc')->get();
+            // Default order
+            $query->orderBy('created_at', 'desc');
 
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Data berhasil dimuat',
-                    'data' => $kolam,
-                    'total' => $kolam->count()
-                ], 200);
-            }
+            $kolam = $query->get();
+
+            // PASTIKAN response selalu JSON yang valid
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dimuat',
+                'data' => $kolam
+            ], 200);
 
         } catch (\Exception $e) {
             Log::error('Error loading kolam: ' . $e->getMessage());
 
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Gagal memuat data: ' . $e->getMessage()
-                ], 500);
-            }
-
-            return back()->with('error', 'Gagal memuat data kolam');
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat data: ' . $e->getMessage(),
+                'data' => []
+            ], 500);
         }
     }
 

@@ -11,10 +11,45 @@ use Illuminate\Support\Facades\Log;
 
 class JadwalPakanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $jadwalPakan = JadwalPakan::with(['kolam', 'pakan'])->get();
+            $query = JadwalPakan::with(['kolam', 'pakan']);
+
+            // Search: cari berdasarkan nama pakan atau nama kolam
+            if ($request->has('search') && $request->search != '') {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->whereHas('pakan', function($subQ) use ($search) {
+                        $subQ->where('nama_pakan', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('kolam', function($subQ) use ($search) {
+                        $subQ->where('nama_kolam', 'like', '%' . $search . '%');
+                    })
+                    ->orWhere('catatan', 'like', '%' . $search . '%');
+                });
+            }
+
+            // Sort berdasarkan parameter
+            if ($request->has('sort_by')) {
+                $sortBy = $request->sort_by;
+                $sortOrder = $request->get('sort_order', 'asc');
+
+                // Validasi sort order
+                if (!in_array($sortOrder, ['asc', 'desc'])) {
+                    $sortOrder = 'asc';
+                }
+
+                // Sort berdasarkan jumlah_kg (berat)
+                if ($sortBy === 'jumlah_kg') {
+                    $query->orderBy('jumlah_kg', $sortOrder);
+                }
+            } else {
+                // Default sort by tanggal terbaru
+                $query->orderBy('tanggal', 'desc');
+            }
+
+            $jadwalPakan = $query->get();
 
             return response()->json([
                 'success' => true,

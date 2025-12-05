@@ -12,51 +12,75 @@ class JenisIkanController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = jenisIkan::query();
+            $query = JenisIkan::query();
 
-            // Perbaikan fitur search dengan grouping WHERE
+            // Fitur search dengan grouping WHERE
             if ($request->has('search') && !empty($request->search)) {
                 $search = $request->search;
                 $query->where(function($q) use ($search) {
                     $q->where('nama_ikan', 'like', "%{$search}%")
-                      ->orWhere('masa_panen_hari', 'like', "%{$search}%")
-                      ->orWhere('berat', 'like', "%{$search}%")
-                      ->orWhere('harga_per_kg', 'like', "%{$search}%");
+                      ->orWhere('keterangan', 'like', "%{$search}%");
                 });
             }
 
-            // Filter berdasarkan berat jika ada
-            if ($request->has('berat') && !empty($request->berat)) {
-                $query->where('berat', $request->berat);
+            // Filter berdasarkan range berat
+            if ($request->has('berat_min') && !empty($request->berat_min)) {
+                $query->where('berat', '>=', $request->berat_min);
+            }
+            if ($request->has('berat_max') && !empty($request->berat_max)) {
+                $query->where('berat', '<=', $request->berat_max);
             }
 
-            // Filter berdasarkan harga jika ada
-            if ($request->has('harga_per_kg') && !empty($request->harga_per_kg)) {
-                $query->where('harga_per_kg', $request->harga_per_kg);
+            // Filter berdasarkan range harga
+            if ($request->has('harga_min') && !empty($request->harga_min)) {
+                $query->where('harga_per_kg', '>=', $request->harga_min);
+            }
+            if ($request->has('harga_max') && !empty($request->harga_max)) {
+                $query->where('harga_per_kg', '<=', $request->harga_max);
             }
 
-            $jenisIkan = $query->orderBy('id', 'desc')->get();
-
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Data berhasil dimuat',
-                    'data' => $jenisIkan,
-                    'total' => $jenisIkan->count()
-                ], 200);
+            // Filter berdasarkan range masa panen
+            if ($request->has('masa_panen_min') && !empty($request->masa_panen_min)) {
+                $query->where('masa_panen_hari', '>=', $request->masa_panen_min);
             }
+            if ($request->has('masa_panen_max') && !empty($request->masa_panen_max)) {
+                $query->where('masa_panen_hari', '<=', $request->masa_panen_max);
+            }
+
+            // Sorting/ordering
+            $sortBy = $request->input('sort_by', 'id'); // default: id
+            $sortOrder = $request->input('sort_order', 'desc'); // default: descending
+
+            // Validasi sort_by untuk keamanan
+            $allowedSortFields = ['id', 'nama_ikan', 'berat', 'masa_panen_hari', 'harga_per_kg', 'created_at'];
+            if (!in_array($sortBy, $allowedSortFields)) {
+                $sortBy = 'id';
+            }
+
+            // Validasi sort_order
+            $sortOrder = in_array(strtolower($sortOrder), ['asc', 'desc']) ? strtolower($sortOrder) : 'desc';
+
+            $jenisIkan = $query->orderBy($sortBy, $sortOrder)->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dimuat',
+                'data' => $jenisIkan,
+                'total' => $jenisIkan->count(),
+                'filters' => [
+                    'search' => $request->search,
+                    'sort_by' => $sortBy,
+                    'sort_order' => $sortOrder
+                ]
+            ], 200);
 
         } catch (\Exception $e) {
-            Log::error('Error loading kolam: ' . $e->getMessage());
+            Log::error('Error loading jenis ikan: ' . $e->getMessage());
 
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Gagal memuat data: ' . $e->getMessage()
-                ], 500);
-            }
-
-            return back()->with('error', 'Gagal memuat data Jenis Ikan');
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat data: ' . $e->getMessage()
+            ], 500);
         }
     }
 
