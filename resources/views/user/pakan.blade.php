@@ -180,7 +180,6 @@
             <!-- Content Section -->
             <div class="p-6">
 
-                <!-- Bagian Atas: Tombol Tambah + Search & Filter -->
                 <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
 
                     <!-- Button Tambah -->
@@ -211,6 +210,16 @@
                             <option value="">Harga</option>
                             <option value="tertinggi">Tertinggi</option>
                             <option value="terendah">Terendah</option>
+                        </select>
+
+                        <!-- Filter Stok -->
+                        <select id="stok-filter"
+                            class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2
+            focus:outline-none focus:ring-2 focus:ring-sipkbi-green
+            bg-white dark:bg-gray-700">
+                            <option value="">Stok</option>
+                            <option value="terbesar">Terbesar</option>
+                            <option value="terkecil">Terkecil</option>
                         </select>
 
                         <!-- Tombol Cari -->
@@ -335,8 +344,6 @@
 
         <!-- JavaScript -->
         <script>
-            // Script JavaScript untuk Pakan - Letakkan sebelum tag </body>
-
             // Dark Mode Toggle
             const toggle = document.getElementById('theme-toggle');
             const html = document.documentElement;
@@ -418,7 +425,7 @@
                 setTimeout(() => {
                     modalRoot.classList.add('hidden');
                     pakanForm.reset();
-                }, 180);
+                }, 200);
             }
 
             modalCloseBtn.addEventListener('click', closeModal);
@@ -436,9 +443,11 @@
             }
 
             // Load data pakan dengan filter dan search
-            async function loadPakan(search = '', hargaFilter = '') {
+            async function loadPakan(search = '', hargaFilter = '', stokFilter = '') {
                 try {
                     const params = new URLSearchParams();
+
+                    // Search parameter (untuk nama pakan, supplier atau jenis pakan)
                     if (search) params.append('search', search);
 
                     // Tentukan sort berdasarkan filter harga
@@ -450,10 +459,19 @@
                         params.append('sort_order', 'asc');
                     }
 
+                    // Tentukan sort berdasarkan filter stok
+                    if (stokFilter === 'terbesar') {
+                        params.append('sort_by', 'stok_kg');
+                        params.append('sort_order', 'desc');
+                    } else if (stokFilter === 'terkecil') {
+                        params.append('sort_by', 'stok_kg');
+                        params.append('sort_order', 'asc');
+                    }
+
                     const queryString = params.toString();
                     const url = `/api/pakan${queryString ? '?' + queryString : ''}`;
 
-                    console.log('Loading data from:', url); // Debug
+                    console.log('Loading data from:', url);
                     const response = await fetch(url, {
                         method: 'GET',
                         headers: {
@@ -465,7 +483,7 @@
                     if (!response.ok) throw new Error('Gagal memuat data');
 
                     const result = await response.json();
-                    console.log('API Response:', result); // Debug
+                    console.log('API Response:', result);
 
                     const data = result.data || [];
                     renderTable(data);
@@ -476,28 +494,70 @@
                 }
             }
 
-            // Apply filters
+            // Apply filters (triggered by Cari button)
             function applyFilters() {
                 const search = document.getElementById('search-input').value.trim();
                 const hargaFilter = document.getElementById('harga-filter').value;
+                const stokFilter = document.getElementById('stok-filter').value;
 
-                loadPakan(search, hargaFilter);
+                loadPakan(search, hargaFilter, stokFilter);
             }
 
             // Reset filters
             function resetFilters() {
                 document.getElementById('search-input').value = '';
                 document.getElementById('harga-filter').value = '';
+                document.getElementById('stok-filter').value = '';
                 loadPakan();
             }
 
-            // Event listener untuk Enter key pada search
+            // Handle filter change (auto filter untuk dropdown)
+            function onFilterChange() {
+                const search = document.getElementById('search-input').value.trim();
+                const hargaFilter = document.getElementById('harga-filter').value;
+                const stokFilter = document.getElementById('stok-filter').value;
+
+                loadPakan(search, hargaFilter, stokFilter);
+            }
+
+            // Handle Harga filter change dengan reset stok filter
+            function onHargaFilterChange() {
+                const hargaFilter = document.getElementById('harga-filter').value;
+
+                // Reset filter stok ke default jika filter harga dipilih
+                if (hargaFilter) {
+                    document.getElementById('stok-filter').value = '';
+                }
+
+                // Apply filter langsung
+                onFilterChange();
+            }
+
+            // Handle Stok filter change dengan reset harga filter
+            function onStokFilterChange() {
+                const stokFilter = document.getElementById('stok-filter').value;
+
+                // Reset filter harga ke default jika filter stok dipilih
+                if (stokFilter) {
+                    document.getElementById('harga-filter').value = '';
+                }
+
+                // Apply filter langsung
+                onFilterChange();
+            }
+
+            // Event listener untuk Enter key pada search input
             document.getElementById('search-input').addEventListener('keyup', function(e) {
                 if (e.key === 'Enter') {
                     applyFilters();
                 }
             });
 
+            // Event listeners untuk filter dropdown (auto filter)
+            document.getElementById('harga-filter').addEventListener('change', onHargaFilterChange);
+            document.getElementById('stok-filter').addEventListener('change', onStokFilterChange);
+
+            // Render Table
             function renderTable(data) {
                 const tbody = document.getElementById('table-body');
 
@@ -538,6 +598,7 @@
     `).join('');
             }
 
+            // Submit Form
             pakanForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
@@ -584,10 +645,12 @@
                 }
             });
 
+            // Edit Pakan
             function editPakan(data) {
                 openModal('edit', data);
             }
 
+            // Delete Pakan
             async function deletePakan(id) {
                 if (!confirm('Apakah Anda yakin ingin menghapus data pakan ini?')) {
                     return;
@@ -617,6 +680,7 @@
                 }
             }
 
+            // Show Alert
             function showAlert(message, type = 'info') {
                 const alertDiv = document.createElement('div');
                 const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
@@ -633,10 +697,11 @@
                 }, 3000);
             }
 
-            // Load initial data saat halaman dibuka
+            // Load data on page load
             document.addEventListener('DOMContentLoaded', () => {
                 loadPakan();
             });
         </script>
 </body>
+
 </html>

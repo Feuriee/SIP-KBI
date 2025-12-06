@@ -413,7 +413,7 @@
             setTimeout(() => {
                 modalRoot.classList.add('hidden');
                 ikanForm.reset();
-            }, 180);
+            }, 200);
         }
 
         modalCloseBtn.addEventListener('click', closeModal);
@@ -434,6 +434,8 @@
         async function loadJenisIkan(search = '', hargaFilter = '', beratFilter = '') {
             try {
                 const params = new URLSearchParams();
+
+                // Search parameter (untuk nama ikan atau masa panen)
                 if (search) params.append('search', search);
 
                 // Filter dan sort berdasarkan harga
@@ -480,48 +482,13 @@
             }
         }
 
-        // Apply filters (digunakan internal)
+        // Apply filters (triggered by Cari button)
         function applyFilters() {
             const search = document.getElementById('search-input').value.trim();
             const hargaFilter = document.getElementById('filter-harga').value;
             const beratFilter = document.getElementById('filter-berat').value;
 
             loadJenisIkan(search, hargaFilter, beratFilter);
-        }
-
-        // Apply search only (triggered by Cari button)
-        function applySearch() {
-            const search = document.getElementById('search-input').value.trim();
-            const hargaFilter = document.getElementById('filter-harga').value;
-            const beratFilter = document.getElementById('filter-berat').value;
-
-            loadJenisIkan(search, hargaFilter, beratFilter);
-        }
-
-        // Handle Harga filter change
-        function onHargaFilterChange() {
-            const hargaFilter = document.getElementById('filter-harga').value;
-
-            // Reset filter berat ke default jika filter harga dipilih
-            if (hargaFilter) {
-                document.getElementById('filter-berat').value = '';
-            }
-
-            // Apply filter langsung
-            applyFilters();
-        }
-
-        // Handle Berat filter change
-        function onBeratFilterChange() {
-            const beratFilter = document.getElementById('filter-berat').value;
-
-            // Reset filter harga ke default jika filter berat dipilih
-            if (beratFilter) {
-                document.getElementById('filter-harga').value = '';
-            }
-
-            // Apply filter langsung
-            applyFilters();
         }
 
         // Reset filters
@@ -532,13 +499,53 @@
             loadJenisIkan();
         }
 
-        // Event listener untuk Enter key pada search
+        // Handle filter change (auto filter untuk dropdown)
+        function onFilterChange() {
+            const search = document.getElementById('search-input').value.trim();
+            const hargaFilter = document.getElementById('filter-harga').value;
+            const beratFilter = document.getElementById('filter-berat').value;
+
+            loadJenisIkan(search, hargaFilter, beratFilter);
+        }
+
+        // Handle Harga filter change dengan reset berat filter
+        function onHargaFilterChange() {
+            const hargaFilter = document.getElementById('filter-harga').value;
+
+            // Reset filter berat ke default jika filter harga dipilih
+            if (hargaFilter) {
+                document.getElementById('filter-berat').value = '';
+            }
+
+            // Apply filter langsung
+            onFilterChange();
+        }
+
+        // Handle Berat filter change dengan reset harga filter
+        function onBeratFilterChange() {
+            const beratFilter = document.getElementById('filter-berat').value;
+
+            // Reset filter harga ke default jika filter berat dipilih
+            if (beratFilter) {
+                document.getElementById('filter-harga').value = '';
+            }
+
+            // Apply filter langsung
+            onFilterChange();
+        }
+
+        // Event listener untuk Enter key pada search input
         document.getElementById('search-input').addEventListener('keyup', function(e) {
             if (e.key === 'Enter') {
-                applySearch();
+                applyFilters();
             }
         });
 
+        // Event listeners untuk filter dropdown (auto filter)
+        document.getElementById('filter-harga').addEventListener('change', onHargaFilterChange);
+        document.getElementById('filter-berat').addEventListener('change', onBeratFilterChange);
+
+        // Render Table
         function renderTable(data) {
             const tbody = document.getElementById('table-body');
 
@@ -637,10 +644,12 @@
             }
         });
 
+        // Edit Data
         function editData(data) {
             openModal('edit', data);
         }
 
+        // Delete Data
         async function deleteData(id) {
             if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) {
                 return;
@@ -670,6 +679,7 @@
             }
         }
 
+        // Show Alert
         function showAlert(message, type = 'info') {
             const alertDiv = document.createElement('div');
             const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
@@ -686,7 +696,7 @@
             }, 3000);
         }
 
-        // Load initial data
+        // Load data on page load
         document.addEventListener('DOMContentLoaded', () => {
             loadJenisIkan();
         });

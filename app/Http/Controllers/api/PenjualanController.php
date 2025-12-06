@@ -10,10 +10,48 @@ use Illuminate\Support\Facades\Log;
 
 class PenjualanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $penjualan = Penjualan::with('panen')->orderBy('tanggal_jual', 'desc')->get();
+            $query = Penjualan::with('panen');
+
+            // Search berdasarkan nama pembeli
+            if ($request->has('search') && !empty($request->search)) {
+                $searchTerm = $request->search;
+                $query->where('pembeli', 'like', '%' . $searchTerm . '%');
+            }
+
+            // Filter berdasarkan metode bayar
+            if ($request->has('metode_bayar') && !empty($request->metode_bayar)) {
+                $query->where('metode_bayar', $request->metode_bayar);
+            }
+
+            // Variable untuk track apakah ada sorting
+            $hasSorting = false;
+
+            // Filter berdasarkan total jual (tertinggi/terendah)
+            if ($request->has('filter_total') && !empty($request->filter_total)) {
+                $filterTotal = $request->filter_total;
+
+                switch ($filterTotal) {
+                    case 'tertinggi':
+                        $query->orderBy('total_jual', 'desc');
+                        $hasSorting = true;
+                        break;
+
+                    case 'terendah':
+                        $query->orderBy('total_jual', 'asc');
+                        $hasSorting = true;
+                        break;
+                }
+            }
+
+            // Jika tidak ada sorting khusus, urutkan berdasarkan tanggal jual terbaru
+            if (!$hasSorting) {
+                $query->orderBy('tanggal_jual', 'desc');
+            }
+
+            $penjualan = $query->get();
 
             return response()->json([
                 'success' => true,

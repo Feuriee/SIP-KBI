@@ -428,7 +428,7 @@
             setTimeout(() => {
                 modalRoot.classList.add('hidden');
                 kolamForm.reset();
-            }, 180);
+            }, 200);
         }
 
         modalCloseBtn.addEventListener('click', closeModal);
@@ -449,7 +449,11 @@
         async function loadKolam(search = '', status = '') {
             try {
                 const params = new URLSearchParams();
+
+                // Search parameter (untuk nama kolam atau lokasi)
                 if (search) params.append('search', search);
+
+                // Filter status
                 if (status) params.append('status', status);
 
                 const queryString = params.toString();
@@ -478,26 +482,12 @@
             }
         }
 
-        // Apply filters (digunakan internal)
+        // Apply filters (triggered by Cari button)
         function applyFilters() {
             const search = document.getElementById('search-input').value.trim();
             const status = document.getElementById('status-filter').value;
 
             loadKolam(search, status);
-        }
-
-        // Apply search only (triggered by Cari button)
-        function applySearch() {
-            const search = document.getElementById('search-input').value.trim();
-            const status = document.getElementById('status-filter').value;
-
-            loadKolam(search, status);
-        }
-
-        // Handle Status filter change (auto filter)
-        function onStatusFilterChange() {
-            // Apply filter langsung saat status berubah
-            applyFilters();
         }
 
         // Reset filters
@@ -507,12 +497,23 @@
             loadKolam();
         }
 
-        // Event listener untuk Enter key pada search
+        // Handle filter change (auto filter untuk dropdown)
+        function onFilterChange() {
+            const search = document.getElementById('search-input').value.trim();
+            const status = document.getElementById('status-filter').value;
+
+            loadKolam(search, status);
+        }
+
+        // Event listener untuk Enter key pada search input
         document.getElementById('search-input').addEventListener('keyup', function(e) {
             if (e.key === 'Enter') {
-                applySearch();
+                applyFilters();
             }
         });
+
+        // Event listener untuk status filter (auto filter)
+        document.getElementById('status-filter').addEventListener('change', onFilterChange);
 
         // Render Table
         function renderTable(data) {
