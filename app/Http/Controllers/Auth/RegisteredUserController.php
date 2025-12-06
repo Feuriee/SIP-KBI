@@ -112,12 +112,29 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * Display a listing of users (untuk admin).
+     * Display a listing of users (untuk admin) dengan search dan filter.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $users = User::orderBy('created_at', 'desc')->get();
+            $query = User::query();
+
+            // Filter berdasarkan search (nama atau email)
+            if ($request->has('search') && !empty($request->search)) {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
+            }
+
+            // Filter berdasarkan role
+            if ($request->has('role') && !empty($request->role)) {
+                $query->where('role', $request->role);
+            }
+
+            // Urutkan berdasarkan tanggal terbaru
+            $users = $query->orderBy('created_at', 'desc')->get();
 
             return response()->json([
                 'success' => true,

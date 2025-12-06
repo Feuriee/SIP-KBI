@@ -553,8 +553,7 @@
                 applySearch();
             }
         });
-
-        // TAMBAHKAN EVENT LISTENER INI - INI YANG KURANG!
+        
         document.getElementById('status-filter').addEventListener('change', onBeratFilterChange);
 
         // Render Table

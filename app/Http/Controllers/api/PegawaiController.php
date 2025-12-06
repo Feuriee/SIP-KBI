@@ -9,10 +9,37 @@ use Illuminate\Support\Facades\Log;
 
 class PegawaiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $pegawai = Pegawai::orderBy('tanggal_masuk', 'desc')->get();
+            $query = Pegawai::query();
+
+            // Filter berdasarkan search (nama atau jabatan)
+            if ($request->has('search') && $request->search != '') {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('nama', 'like', "%{$search}%")
+                      ->orWhere('jabatan', 'like', "%{$search}%");
+                });
+            }
+
+            // Filter berdasarkan jabatan
+            if ($request->has('jabatan') && $request->jabatan != '') {
+                $query->where('jabatan', 'like', "%{$request->jabatan}%");
+            }
+
+            // Filter gaji (tertinggi/terendah)
+            if ($request->has('filter_gaji')) {
+                if ($request->filter_gaji == 'high') {
+                    $query->orderBy('gaji_pokok', 'desc');
+                } elseif ($request->filter_gaji == 'low') {
+                    $query->orderBy('gaji_pokok', 'asc');
+                }
+            } else {
+                $query->orderBy('tanggal_masuk', 'desc');
+            }
+
+            $pegawai = $query->get();
 
             return response()->json([
                 'success' => true,

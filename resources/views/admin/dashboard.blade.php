@@ -31,8 +31,7 @@
             <div class="overflow-y-auto">
                 <div class="p-5 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
                     <div class="flex items-center space-x-3">
-                        <div
-                            class="w-10 h-10 bg-sipkbi-green rounded-lg flex items-center justify-center text-white font-bold">
+                        <div class="w-10 h-10 bg-sipkbi-green rounded-lg flex items-center justify-center text-white font-bold">
                             KBI
                         </div>
                         <h1 class="font-bold text-lg text-sipkbi-green">SIP-KBI</h1>
@@ -47,7 +46,7 @@
 
                 <nav class="mt-6 px-3">
                     <a href="{{ route('admin.dashboard') }}"
-                        class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('admin.dashboard') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                        class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 bg-sipkbi-green text-white transition">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
@@ -57,10 +56,9 @@
                     </a>
 
                     <div class="mt-4">
-                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase px-4 mb-2">Manajemen
-                            Keuangan</p>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase px-4 mb-2">Manajemen Keuangan</p>
                         <a href="{{ route('admin.keuangan') }}"
-                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('admin.keuangan') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 hover:bg-sipkbi-green hover:text-white transition">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
@@ -69,7 +67,7 @@
                             Laporan Keuangan
                         </a>
                         <a href="{{ route('admin.biaya') }}"
-                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('admin.biaya') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 hover:bg-sipkbi-green hover:text-white transition">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
@@ -78,7 +76,7 @@
                             Biaya Operasional
                         </a>
                         <a href="{{ route('admin.pengeluaran') }}"
-                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('admin.penjualan') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 hover:bg-sipkbi-green hover:text-white transition">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -86,7 +84,7 @@
                             Pengeluaran
                         </a>
                         <a href="{{ route('admin.penjualan') }}"
-                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('admin.penjualan') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 hover:bg-sipkbi-green hover:text-white transition">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -96,10 +94,9 @@
                     </div>
 
                     <div class="mt-4">
-                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase px-4 mb-2">Manajemen
-                            Budidaya</p>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase px-4 mb-2">Manajemen Budidaya</p>
                         <a href="{{ route('admin.kolam') }}"
-                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('admin.kolam') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 hover:bg-sipkbi-green hover:text-white transition">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
@@ -108,7 +105,7 @@
                             Kolam
                         </a>
                         <a href="{{ route('admin.ikan') }}"
-                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('admin.ikan') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 hover:bg-sipkbi-green hover:text-white transition">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5">
@@ -117,7 +114,7 @@
                             Jenis Ikan
                         </a>
                         <a href="{{ route('admin.pakan') }}"
-                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('admin.pakan') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 hover:bg-sipkbi-green hover:text-white transition">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
@@ -125,7 +122,7 @@
                             Pakan
                         </a>
                         <a href="{{ route('admin.jadwal-pakan') }}"
-                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('admin.jadwal-pakan') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 hover:bg-sipkbi-green hover:text-white transition">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
@@ -134,7 +131,7 @@
                             Jadwal Pakan
                         </a>
                         <a href="{{ route('admin.panen') }}"
-                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('admin.panen') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 hover:bg-sipkbi-green hover:text-white transition">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
@@ -147,7 +144,7 @@
                     <div class="mt-4">
                         <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase px-4 mb-2">SDM</p>
                         <a href="{{ route('admin.pegawai') }}"
-                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('admin.pegawai') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 hover:bg-sipkbi-green hover:text-white transition">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
@@ -156,7 +153,7 @@
                             Pegawai
                         </a>
                         <a href="{{ route('admin.gaji') }}"
-                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('admin.gaji') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 hover:bg-sipkbi-green hover:text-white transition">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
@@ -165,7 +162,7 @@
                             Gaji Karyawan
                         </a>
                         <a href="{{ route('admin.users') }}"
-                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('admin.users') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 hover:bg-sipkbi-green hover:text-white transition">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -179,9 +176,7 @@
             <div class="p-5 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
                 <span class="text-sm">{{ Auth::user()->name }}</span>
                 <form method="POST" action="{{ route('logout') }}">
-
                     @csrf
-
                     <button type="submit" class="text-red-500 hover:underline text-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -197,75 +192,223 @@
         <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
 
         <!-- Main Content -->
-        <main class="flex-1 lg:ml-64 p-6">
-            <h1 class="flex items-center justify-between text-2xl font-bold mb-6">
-                Dashboard SIP-KBI
-                <button id="theme-toggle"
-                    class="px-3 py-2 border rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-                    🌞
+        <main class="flex-1 lg:ml-64">
+            <!-- Top Bar -->
+            <div class="bg-white dark:bg-gray-800 shadow-sm p-4 flex items-center justify-between sticky top-0 z-30">
+                <button id="open-sidebar" class="lg:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
                 </button>
-            </h1>
-            <!-- Ringkasan -->
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-                <div class="bg-blue-500 text-white rounded-lg p-4 shadow">
-                    <h3 class="text-sm">Total Panen</h3>
-                    <p class="text-2xl font-bold">{{ $totalPanen }}</p>
-                </div>
-                <div class="bg-green-500 text-white rounded-lg p-4 shadow">
-                    <h3 class="text-sm">Total Penjualan</h3>
-                    <p class="text-2xl font-bold">Rp {{ number_format($totalPenjualan, 0, ',', '.') }}</p>
-                </div>
-                <div class="bg-indigo-500 text-white rounded-lg p-4 shadow">
-                    <h3 class="text-sm">Pendapatan</h3>
-                    <p class="text-2xl font-bold">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</p>
-                </div>
-                <div class="bg-red-500 text-white rounded-lg p-4 shadow">
-                    <h3 class="text-sm">Pengeluaran</h3>
-                    <p class="text-2xl font-bold">Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</p>
-                </div>
-                <div class="bg-emerald-500 text-white rounded-lg p-4 shadow">
-                    <h3 class="text-sm">Laba Bersih</h3>
-                    <p class="text-2xl font-bold">Rp {{ number_format($labaBersih, 0, ',', '.') }}</p>
+                <h1 class="text-xl font-bold">Dashboard SIP-KBI</h1>
+                <div class="flex items-center space-x-3">
+                    <button id="theme-toggle" class="px-3 py-2 border rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                        🌞
+                    </button>
                 </div>
             </div>
 
-            <!-- Filter Tahun -->
-            <div class="mb-6 flex items-center gap-4">
-                <label for="yearFilter" class="font-semibold text-gray-700 dark:text-gray-300">Pilih Tahun:</label>
-                <select id="yearFilter"
-                    class="p-2 border border-gray-300 dark:border-gray-600 rounded-md
-                        focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800
-                        text-gray-900 dark:text-gray-100">
-                    @for ($i = date('Y'); $i >= 2020; $i--)
-                        <option value="{{ $i }}">{{ $i }}</option>
-                    @endfor
-                </select>
+            <!-- Dashboard Content -->
+            <div class="p-6">
+                <!-- Welcome Banner -->
+                <div class="bg-gradient-to-r from-sipkbi-green to-emerald-600 rounded-xl p-6 mb-8 text-white shadow-lg">
+                    <h2 class="text-2xl font-bold mb-2">Selamat Datang di SIP-KBI</h2>
+                    <p class="text-emerald-100">Sistem Informasi Pengelolaan Kolam Budidaya Ikan - Admin Panel</p>
+                    <div class="mt-4 flex items-center text-sm">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span id="current-date"></span>
+                    </div>
+                </div>
+
+                <!-- Ringkasan Kartu -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+                    <!-- Total Panen -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border-l-4 border-blue-500 hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                                <svg class="w-6 h-6 text-blue-600 dark:text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Panen</h3>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($totalPanen, 1) }} <span class="text-base font-normal">kg</span></p>
+                        <p class="text-xs text-green-600 mt-2">↑ Data keseluruhan</p>
+                    </div>
+
+                    <!-- Total Penjualan -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border-l-4 border-green-500 hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
+                                <svg class="w-6 h-6 text-green-600 dark:text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Penjualan</h3>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($totalPenjualan / 1000000, 1) }} <span class="text-base font-normal">Juta</span></p>
+                        <p class="text-xs text-green-600 mt-2">↑ Data keseluruhan</p>
+                    </div>
+
+                    <!-- Pendapatan -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border-l-4 border-indigo-500 hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="p-3 bg-indigo-100 dark:bg-indigo-900 rounded-lg">
+                                <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="text-sm text-gray-600 dark:text-gray-400 mb-1">Pendapatan</h3>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($totalPendapatan / 1000000, 1) }} <span class="text-base font-normal">Juta</span></p>
+                        <p class="text-xs text-green-600 mt-2">↑ Data keseluruhan</p>
+                    </div>
+
+                    <!-- Pengeluaran -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border-l-4 border-red-500 hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="p-3 bg-red-100 dark:bg-red-900 rounded-lg">
+                                <svg class="w-6 h-6 text-red-600 dark:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="text-sm text-gray-600 dark:text-gray-400 mb-1">Pengeluaran</h3>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($totalPengeluaran / 1000000, 1) }} <span class="text-base font-normal">Juta</span></p>
+                        <p class="text-xs text-red-600 mt-2">↑ Data keseluruhan</p>
+                    </div>
+
+                    <!-- Laba Bersih -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border-l-4 border-emerald-500 hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="p-3 bg-emerald-100 dark:bg-emerald-900 rounded-lg">
+                                <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="text-sm text-gray-600 dark:text-gray-400 mb-1">Laba Bersih</h3>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($labaBersih / 1000000, 1) }} <span class="text-base font-normal">Juta</span></p>
+                        <p class="text-xs text-{{ $labaBersih >= 0 ? 'green' : 'red' }}-600 mt-2">{{ $labaBersih >= 0 ? '↑' : '↓' }} Data keseluruhan</p>
+                    </div>
+                </div>
+
+                <!-- Filter Tahun -->
+                <div class="mb-6 flex items-center gap-4 bg-white dark:bg-gray-800 rounded-lg p-4 shadow">
+                    <label for="yearFilter" class="font-semibold text-gray-700 dark:text-gray-300">Pilih Tahun:</label>
+                    <select id="yearFilter"
+                        class="p-2 border border-gray-300 dark:border-gray-600 rounded-md
+                            focus:ring-2 focus:ring-sipkbi-green bg-white dark:bg-gray-700
+                            text-gray-900 dark:text-gray-100">
+                        @for ($i = date('Y'); $i >= 2020; $i--)
+                            <option value="{{ $i }}">{{ $i }}</option>
+                        @endfor
+                    </select>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Grafik Keuangan Bulanan -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-bold mb-4 flex items-center">
+                            <div class="w-2 h-6 bg-sipkbi-green rounded mr-3"></div>
+                            Grafik Keuangan Bulanan
+                        </h3>
+                        <canvas id="keuanganChart" height="100"></canvas>
+                    </div>
+
+                    <!-- Grafik Panen Bulanan -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-bold mb-4 flex items-center">
+                            <div class="w-2 h-6 bg-sipkbi-green rounded mr-3"></div>
+                            Grafik Total Panen per Bulan
+                        </h3>
+                        <canvas id="panenChart" height="100"></canvas>
+                    </div>
+                </div>
+
+                <!-- Status Kolam & Top Ikan -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-bold mb-4 flex items-center">
+                            <div class="w-2 h-6 bg-sipkbi-green rounded mr-3"></div>
+                            Status Kolam
+                        </h3>
+                        <div class="flex justify-center">
+                            <canvas id="kolamChart" style="max-height: 250px;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-bold mb-4 flex items-center">
+                            <div class="w-2 h-6 bg-sipkbi-green rounded mr-3"></div>
+                            Top 5 Jenis Ikan
+                        </h3>
+                        <div class="space-y-3">
+                            @foreach($topIkan as $index => $ikan)
+                            <div>
+                                <div class="flex items-center justify-between text-sm mb-1">
+                                    <span class="text-gray-600 dark:text-gray-400">{{ $ikan->nama_ikan }}</span>
+                                    <span class="font-semibold">{{ number_format($ikan->total_berat, 1) }} kg</span>
+                                </div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                    <div class="h-2 rounded-full {{ ['bg-sipkbi-green', 'bg-blue-500', 'bg-emerald-500', 'bg-yellow-500', 'bg-orange-500'][$index] }}" style="width: {{ 100 - ($index * 10) }}%"></div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panen Terbaru -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <h3 class="text-lg font-bold mb-4 flex items-center">
+                        <div class="w-2 h-6 bg-sipkbi-green rounded mr-3"></div>
+                        Panen Terbaru
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b dark:border-gray-700">
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Tanggal</th>
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Kolam</th>
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Jenis Ikan</th>
+                                    <th class="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Berat (kg)</th>
+                                    <th class="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Jumlah</th>
+                                    <th class="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Pendapatan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($panenTerbaru as $panen)
+                                <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                    <td class="py-3 px-4 text-sm">{{ date('d/m/Y', strtotime($panen->tanggal_panen)) }}</td>
+                                    <td class="py-3 px-4 text-sm">{{ $panen->nama_kolam }}</td>
+                                    <td class="py-3 px-4 text-sm"><span class="px-2 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full text-xs">{{ $panen->nama_ikan }}</span></td>
+                                    <td class="py-3 px-4 text-sm text-right">{{ number_format($panen->berat_total_kg, 1) }}</td>
+                                    <td class="py-3 px-4 text-sm text-right">{{ number_format($panen->jumlah_ikan) }}</td>
+                                    <td class="py-3 px-4 text-sm text-right font-semibold text-green-600">Rp {{ number_format($panen->total_pendapatan, 0, ',', '.') }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-
-
-            <!-- Grafik Keuangan -->
-            <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-                <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Grafik Keuangan Bulanan</h2>
-                <canvas id="keuanganChart" height="100"></canvas>
-            </section>
-
-            <!-- Grafik Panen -->
-            <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Grafik Total Panen per Bulan
-                </h2>
-                <canvas id="panenChart" height="100"></canvas>
-            </section>
         </main>
     </div>
 
-    <!-- JavaScript -->
     <script>
+        // Set tanggal saat ini
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('id-ID', options);
+
         // Dark Mode Toggle
         const toggle = document.getElementById('theme-toggle');
         const html = document.documentElement;
 
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia(
-                '(prefers-color-scheme: dark)').matches)) {
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             html.classList.add('dark');
             toggle.textContent = '🌙';
         } else {
@@ -278,8 +421,6 @@
             const isDark = html.classList.contains('dark');
             toggle.textContent = isDark ? '🌙' : '🌞';
             localStorage.theme = isDark ? 'dark' : 'light';
-
-            // Update charts when theme changes
             updateChartColors();
         });
 
@@ -303,291 +444,282 @@
             sidebar.classList.add('-translate-x-full');
             overlay.classList.add('hidden');
         });
-    </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const keuanganCtx = document.getElementById('keuanganChart').getContext('2d');
-            const panenCtx = document.getElementById('panenChart').getContext('2d');
+        // Chart variables
+        let keuanganChart, panenChart, kolamChart;
+        const kolamAktif = {{ $kolamAktif }};
+        const kolamNonaktif = {{ $kolamNonaktif }};
 
-            let keuanganChart, panenChart;
-
-            // Fungsi untuk mendapatkan warna berdasarkan tema
-            const getChartColors = () => {
-                const isDark = document.documentElement.classList.contains('dark');
-                return {
-                    textColor: isDark ? '#e5e7eb' : '#374151',
-                    gridColor: isDark ? '#374151' : '#e5e7eb'
-                };
+        // Chart colors
+        function getChartColors() {
+            const isDark = html.classList.contains('dark');
+            return {
+                text: isDark ? '#e5e7eb' : '#374151',
+                grid: isDark ? '#374151' : '#e5e7eb',
+                pendapatan: '#10b981',
+                pengeluaran: '#ef4444',
+                laba: '#6366f1'
             };
+        }
 
-            // Fungsi untuk memformat angka ke Rupiah
-            const formatRupiah = (angka) => {
-                return 'Rp ' + new Intl.NumberFormat('id-ID').format(angka);
-            };
+        function updateChartColors() {
+            const colors = getChartColors();
 
-            const fetchKeuangan = (year) => {
-                fetch("{{ route('admin.dashboard.chart') }}?year=" + year)
-                    .then(res => res.json())
-                    .then(data => {
-                        const colors = getChartColors();
+            if (keuanganChart) {
+                keuanganChart.options.scales.x.ticks.color = colors.text;
+                keuanganChart.options.scales.y.ticks.color = colors.text;
+                keuanganChart.options.scales.x.grid.color = colors.grid;
+                keuanganChart.options.scales.y.grid.color = colors.grid;
+                keuanganChart.options.plugins.legend.labels.color = colors.text;
+                keuanganChart.update();
+            }
 
-                        // Gunakan bulan_label dari response
-                        const labels = data.map(d => d.bulan_label || d.bulan);
-                        const pendapatan = data.map(d => parseFloat(d.pendapatan) || 0);
-                        const pengeluaran = data.map(d => parseFloat(d.pengeluaran) || 0);
-                        const laba = data.map(d => parseFloat(d.laba) || 0);
+            if (panenChart) {
+                panenChart.options.scales.x.ticks.color = colors.text;
+                panenChart.options.scales.y.ticks.color = colors.text;
+                panenChart.options.scales.y.grid.color = colors.grid;
+                panenChart.options.plugins.legend.labels.color = colors.text;
+                panenChart.update();
+            }
 
-                        // Destroy chart lama jika ada
-                        if (keuanganChart) keuanganChart.destroy();
+            if (kolamChart) {
+                kolamChart.options.plugins.legend.labels.color = colors.text;
+                kolamChart.update();
+            }
+        }
 
-                        keuanganChart = new Chart(keuanganCtx, {
-                            type: 'line',
-                            data: {
-                                labels,
-                                datasets: [{
-                                        label: 'Pendapatan',
-                                        data: pendapatan,
-                                        borderColor: '#16a34a',
-                                        backgroundColor: 'rgba(22, 163, 74, 0.1)',
-                                        borderWidth: 2,
-                                        tension: 0.4,
-                                        fill: true,
-                                        pointRadius: 4,
-                                        pointHoverRadius: 6
-                                    },
-                                    {
-                                        label: 'Pengeluaran',
-                                        data: pengeluaran,
-                                        borderColor: '#dc2626',
-                                        backgroundColor: 'rgba(220, 38, 38, 0.1)',
-                                        borderWidth: 2,
-                                        tension: 0.4,
-                                        fill: true,
-                                        pointRadius: 4,
-                                        pointHoverRadius: 6
-                                    },
-                                    {
-                                        label: 'Laba Bersih',
-                                        data: laba,
-                                        borderColor: '#2563eb',
-                                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                                        borderWidth: 2,
-                                        tension: 0.4,
-                                        fill: true,
-                                        pointRadius: 4,
-                                        pointHoverRadius: 6
-                                    }
-                                ]
+        // Fungsi untuk memformat angka ke Rupiah
+        const formatRupiah = (angka) => {
+            return 'Rp ' + new Intl.NumberFormat('id-ID').format(angka);
+        };
+
+        // Fetch dan render chart keuangan
+        const fetchKeuangan = (year) => {
+            fetch("{{ route('admin.dashboard.chart') }}?year=" + year)
+                .then(res => res.json())
+                .then(data => {
+                    const colors = getChartColors();
+                    const labels = data.map(d => d.bulan_label || d.bulan);
+                    const pendapatan = data.map(d => parseFloat(d.pendapatan) || 0);
+                    const pengeluaran = data.map(d => parseFloat(d.pengeluaran) || 0);
+                    const laba = data.map(d => parseFloat(d.laba) || 0);
+
+                    if (keuanganChart) keuanganChart.destroy();
+
+                    const ctx = document.getElementById('keuanganChart').getContext('2d');
+                    keuanganChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels,
+                            datasets: [{
+                                label: 'Pendapatan',
+                                data: pendapatan,
+                                borderColor: colors.pendapatan,
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                pointRadius: 4,
+                                pointHoverRadius: 6
                             },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: true,
-                                interaction: {
-                                    mode: 'index',
-                                    intersect: false,
-                                },
-                                plugins: {
-                                    legend: {
-                                        display: true,
-                                        position: 'top',
-                                        labels: {
-                                            color: colors.textColor,
-                                            padding: 15,
-                                            font: {
-                                                size: 12
-                                            }
-                                        }
-                                    },
-                                    tooltip: {
-                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                        padding: 12,
-                                        titleFont: {
-                                            size: 14
-                                        },
-                                        bodyFont: {
-                                            size: 13
-                                        },
-                                        callbacks: {
-                                            label: function(context) {
-                                                let label = context.dataset.label || '';
-                                                if (label) {
-                                                    label += ': ';
-                                                }
-                                                label += formatRupiah(context.parsed.y);
-                                                return label;
-                                            }
-                                        }
+                            {
+                                label: 'Pengeluaran',
+                                data: pengeluaran,
+                                borderColor: colors.pengeluaran,
+                                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                pointRadius: 4,
+                                pointHoverRadius: 6
+                            },
+                            {
+                                label: 'Laba Bersih',
+                                data: laba,
+                                borderColor: colors.laba,
+                                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                pointRadius: 4,
+                                pointHoverRadius: 6
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                    labels: {
+                                        color: colors.text,
+                                        usePointStyle: true,
+                                        padding: 15
                                     }
                                 },
-                                scales: {
-                                    x: {
-                                        ticks: {
-                                            color: colors.textColor,
-                                            font: {
-                                                size: 11
-                                            }
-                                        },
-                                        grid: {
-                                            color: colors.gridColor,
-                                            display: false
-                                        }
-                                    },
-                                    y: {
-                                        ticks: {
-                                            color: colors.textColor,
-                                            font: {
-                                                size: 11
-                                            },
-                                            callback: function(value) {
-                                                return formatRupiah(value);
-                                            }
-                                        },
-                                        grid: {
-                                            color: colors.gridColor
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return context.dataset.label + ': ' + formatRupiah(context.parsed.y);
                                         }
                                     }
                                 }
-                            }
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error fetching keuangan data:', error);
-                    });
-            };
-
-            const fetchPanen = (year) => {
-                fetch("{{ route('admin.dashboard.panen') }}?year=" + year)
-                    .then(res => res.json())
-                    .then(data => {
-                        const colors = getChartColors();
-
-                        // Gunakan bulan_label dari response
-                        const labels = data.map(d => d.bulan_label || d.bulan);
-                        const panen = data.map(d => parseFloat(d.total_panen) || 0);
-
-                        // Destroy chart lama jika ada
-                        if (panenChart) panenChart.destroy();
-
-                        panenChart = new Chart(panenCtx, {
-                            type: 'bar',
-                            data: {
-                                labels,
-                                datasets: [{
-                                    label: 'Total Panen (kg)',
-                                    data: panen,
-                                    backgroundColor: 'rgba(245, 158, 11, 0.7)',
-                                    borderColor: '#f59e0b',
-                                    borderWidth: 2,
-                                    borderRadius: 8,
-                                    borderSkipped: false,
-                                }]
                             },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: true,
-                                plugins: {
-                                    legend: {
-                                        display: true,
-                                        position: 'top',
-                                        labels: {
-                                            color: colors.textColor,
-                                            padding: 15,
-                                            font: {
-                                                size: 12
-                                            }
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: colors.text,
+                                        callback: function(value) {
+                                            return formatRupiah(value);
                                         }
                                     },
-                                    tooltip: {
-                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                        padding: 12,
-                                        titleFont: {
-                                            size: 14
-                                        },
-                                        bodyFont: {
-                                            size: 13
-                                        },
-                                        callbacks: {
-                                            label: function(context) {
-                                                return 'Total Panen: ' + context.parsed.y
-                                                    .toFixed(2) + ' kg';
-                                            }
-                                        }
+                                    grid: {
+                                        color: colors.grid
                                     }
                                 },
-                                scales: {
-                                    x: {
-                                        ticks: {
-                                            color: colors.textColor,
-                                            font: {
-                                                size: 11
-                                            }
-                                        },
-                                        grid: {
-                                            display: false
-                                        }
+                                x: {
+                                    ticks: {
+                                        color: colors.text
                                     },
-                                    y: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            color: colors.textColor,
-                                            font: {
-                                                size: 11
-                                            },
-                                            callback: function(value) {
-                                                return value + ' kg';
-                                            }
-                                        },
-                                        grid: {
-                                            color: colors.gridColor
-                                        }
+                                    grid: {
+                                        color: colors.grid,
+                                        display: false
                                     }
                                 }
                             }
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error fetching panen data:', error);
+                        }
                     });
-            };
+                })
+                .catch(error => console.error('Error:', error));
+        };
 
-            // Fungsi untuk update warna chart saat tema berubah
-            window.updateChartColors = () => {
-                const colors = getChartColors();
+        // Fetch dan render chart panen
+        const fetchPanen = (year) => {
+            fetch("{{ route('admin.dashboard.panen') }}?year=" + year)
+                .then(res => res.json())
+                .then(data => {
+                    const colors = getChartColors();
+                    const labels = data.map(d => d.bulan_label || d.bulan);
+                    const panen = data.map(d => parseFloat(d.total_panen) || 0);
 
-                if (keuanganChart) {
-                    keuanganChart.options.plugins.legend.labels.color = colors.textColor;
-                    keuanganChart.options.scales.x.ticks.color = colors.textColor;
-                    keuanganChart.options.scales.x.grid.color = colors.gridColor;
-                    keuanganChart.options.scales.y.ticks.color = colors.textColor;
-                    keuanganChart.options.scales.y.grid.color = colors.gridColor;
-                    keuanganChart.update();
+                    if (panenChart) panenChart.destroy();
+
+                    const ctx = document.getElementById('panenChart').getContext('2d');
+                    panenChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels,
+                            datasets: [{
+                                label: 'Total Panen (kg)',
+                                data: panen,
+                                backgroundColor: 'rgba(245, 158, 11, 0.7)',
+                                borderColor: '#f59e0b',
+                                borderWidth: 2,
+                                borderRadius: 8,
+                                borderSkipped: false,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top',
+                                    labels: {
+                                        color: colors.text,
+                                        padding: 15
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return 'Total Panen: ' + context.parsed.y.toFixed(2) + ' kg';
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    ticks: {
+                                        color: colors.text
+                                    },
+                                    grid: {
+                                        display: false
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: colors.text,
+                                        callback: function(value) {
+                                            return value + ' kg';
+                                        }
+                                    },
+                                    grid: {
+                                        color: colors.grid
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        };
+
+        // Grafik Status Kolam
+        const initKolamChart = () => {
+            const colors = getChartColors();
+            const ctx = document.getElementById('kolamChart').getContext('2d');
+            kolamChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Aktif', 'Nonaktif'],
+                    datasets: [{
+                        data: [kolamAktif, kolamNonaktif],
+                        backgroundColor: ['#16a34a', '#ef4444'],
+                        borderWidth: 2,
+                        borderColor: html.classList.contains('dark') ? '#1f2937' : '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: colors.text,
+                                padding: 10,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = kolamAktif + kolamNonaktif;
+                                    const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                    return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
                 }
+            });
+        };
 
-                if (panenChart) {
-                    panenChart.options.plugins.legend.labels.color = colors.textColor;
-                    panenChart.options.scales.x.ticks.color = colors.textColor;
-                    panenChart.options.scales.y.ticks.color = colors.textColor;
-                    panenChart.options.scales.y.grid.color = colors.gridColor;
-                    panenChart.update();
-                }
-            };
+        // Event listener untuk filter tahun
+        const yearSelect = document.getElementById('yearFilter');
+        const loadCharts = () => {
+            const year = yearSelect.value;
+            fetchKeuangan(year);
+            fetchPanen(year);
+        };
 
-            // Event listener untuk filter tahun
-            const yearSelect = document.getElementById('yearFilter');
-            const loadCharts = () => {
-                const year = yearSelect.value;
-                fetchKeuangan(year);
-                fetchPanen(year);
-            };
+        yearSelect.addEventListener('change', loadCharts);
 
-            yearSelect.addEventListener('change', loadCharts);
-
-            // Load chart dengan tahun default
-            loadCharts();
-        });
+        // Initialize charts
+        loadCharts();
+        initKolamChart();
     </script>
-
 </body>
 
 </html>

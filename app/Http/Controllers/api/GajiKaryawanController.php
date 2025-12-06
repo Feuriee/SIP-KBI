@@ -10,10 +10,43 @@ use Illuminate\Support\Facades\Log;
 
 class GajiKaryawanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $gajiKaryawan = GajiKaryawan::with('pegawai')->orderBy('bulan', 'desc')->get();
+            $query = GajiKaryawan::with('pegawai');
+
+            // Filter berdasarkan search (nama pegawai)
+            if ($request->has('search') && $request->search != '') {
+                $search = $request->search;
+                $query->whereHas('pegawai', function($q) use ($search) {
+                    $q->where('nama', 'like', "%{$search}%")
+                      ->orWhere('jabatan', 'like', "%{$search}%");
+                });
+            }
+
+            // Filter berdasarkan status pembayaran
+            if ($request->has('status') && $request->status != '') {
+                $query->where('status_bayar', $request->status);
+            }
+
+            // Filter berdasarkan bulan
+            if ($request->has('bulan') && $request->bulan != '') {
+                $bulan = $request->bulan;
+                $query->whereRaw('DATE_FORMAT(bulan, "%Y-%m") = ?', [$bulan]);
+            }
+
+            // Filter gaji (tertinggi/terendah)
+            if ($request->has('filter_gaji')) {
+                if ($request->filter_gaji == 'high') {
+                    $query->orderBy('total_diterima', 'desc');
+                } elseif ($request->filter_gaji == 'low') {
+                    $query->orderBy('total_diterima', 'asc');
+                }
+            } else {
+                $query->orderBy('bulan', 'desc');
+            }
+
+            $gajiKaryawan = $query->get();
 
             return response()->json([
                 'success' => true,
@@ -34,7 +67,7 @@ class GajiKaryawanController extends Controller
     public function getOptions()
     {
         try {
-            $pegawai = Pegawai::select('id', 'nama', 'gaji_pokok')->get();
+            $pegawai = Pegawai::select('id', 'nama', 'jabatan', 'gaji_pokok')->get();
 
             return response()->json([
                 'success' => true,
@@ -58,16 +91,19 @@ class GajiKaryawanController extends Controller
         try {
             $validated = $request->validate([
                 'pegawai_id' => 'required|exists:pegawai,id',
-                'bulan' => 'required|date', // ✅ BENAR
+                'bulan' => 'required|string',
                 'jumlah_gaji' => 'required|numeric|min:0',
                 'bonus' => 'nullable|numeric|min:0',
                 'potongan' => 'nullable|numeric|min:0',
-                'status_bayar' => 'required|in:belum,sudah'
+                'status_bayar' => 'required|in:Lunas,Belum Lunas'
             ]);
 
             // Set default values
             $validated['bonus'] = $validated['bonus'] ?? 0;
             $validated['potongan'] = $validated['potongan'] ?? 0;
+
+            // Format bulan ke YYYY-MM-01 untuk disimpan di database
+            $validated['bulan'] = $validated['bulan'] . '-01';
 
             // Hitung total diterima otomatis
             $validated['total_diterima'] = $validated['jumlah_gaji'] +
@@ -107,16 +143,19 @@ class GajiKaryawanController extends Controller
 
             $validated = $request->validate([
                 'pegawai_id' => 'required|exists:pegawai,id',
-                'bulan' => 'required|date',
+                'bulan' => 'required|string',
                 'jumlah_gaji' => 'required|numeric|min:0',
                 'bonus' => 'nullable|numeric|min:0',
                 'potongan' => 'nullable|numeric|min:0',
-                'status_bayar' => 'required|in:belum,sudah'
+                'status_bayar' => 'required|in:Lunas,Belum Lunas'
             ]);
 
             // Set default values
             $validated['bonus'] = $validated['bonus'] ?? 0;
             $validated['potongan'] = $validated['potongan'] ?? 0;
+
+            // Format bulan ke YYYY-MM-01 untuk disimpan di database
+            $validated['bulan'] = $validated['bulan'] . '-01';
 
             // Hitung total diterima otomatis
             $validated['total_diterima'] = $validated['jumlah_gaji'] +

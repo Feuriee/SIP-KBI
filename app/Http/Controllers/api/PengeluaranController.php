@@ -9,10 +9,48 @@ use Illuminate\Support\Facades\Log;
 
 class PengeluaranController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $pengeluaran = Pengeluaran::orderBy('tanggal', 'desc')->get();
+            $query = Pengeluaran::query();
+
+            // Filter berdasarkan search (deskripsi atau keterangan)
+            if ($request->has('search') && $request->search != '') {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('deskripsi', 'like', "%{$search}%")
+                      ->orWhere('keterangan', 'like', "%{$search}%");
+                });
+            }
+
+            // Filter berdasarkan kategori
+            if ($request->has('kategori') && $request->kategori != '') {
+                $query->where('kategori', $request->kategori);
+            }
+
+            // Filter berdasarkan tanggal (bulan tertentu)
+            if ($request->has('bulan') && $request->bulan != '') {
+                $bulan = $request->bulan;
+                $query->whereMonth('tanggal', $bulan);
+            }
+
+            // Filter berdasarkan tahun
+            if ($request->has('tahun') && $request->tahun != '') {
+                $query->whereYear('tanggal', $request->tahun);
+            }
+
+            // Filter nominal (tertinggi/terendah)
+            if ($request->has('filter_nominal')) {
+                if ($request->filter_nominal == 'high') {
+                    $query->orderBy('jumlah', 'desc');
+                } elseif ($request->filter_nominal == 'low') {
+                    $query->orderBy('jumlah', 'asc');
+                }
+            } else {
+                $query->orderBy('tanggal', 'desc');
+            }
+
+            $pengeluaran = $query->get();
 
             return response()->json([
                 'success' => true,
