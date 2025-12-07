@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Dashboard | SIP-KBI</title>
+    <title>Dashboard | Penjualan</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -20,21 +21,6 @@
             }
         }
     </script>
-    <style>
-        .modal-transition {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .modal-hidden {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-
-        .modal-visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-    </style>
 </head>
 
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition duration-500">
@@ -162,6 +148,7 @@
             </div>
 
             <div class="p-5 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
+
                 <span class="text-sm">{{ Auth::user()->name }}</span>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -189,7 +176,7 @@
                             d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </button>
-                <h1 class="text-xl font-bold">Data Kolam</h1>
+                <h1 class="text-xl font-bold">Data Pengeluaran</h1>
                 <div class="flex items-center space-x-3">
                     <button id="theme-toggle"
                         class="px-3 py-2 border rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition">
@@ -202,31 +189,45 @@
             <div class="p-6">
 
                 <!-- Header Controls (Tambah + Search + Filter) -->
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between flex-wrap items-center gap-4">
 
                     <!-- Button Tambah -->
                     <button onclick="openModal('add')"
-                        class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
+                        class="bg-sipkbi-green hover:bg-sipkbi-dark text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
                             </path>
                         </svg>
-                        <span>Tambah Kolam</span>
+                        <span>Tambah Pengeluaran</span>
                     </button>
 
                     <!-- Search & Filter Controls -->
-                    <div class="flex items-center gap-3">
+                    <div class="flex flex-wrap items-center gap-3">
 
                         <!-- Search Input -->
-                        <input type="text" id="search-input" placeholder="Cari nama kolam atau lokasi..."
-                            class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10 w-56 focus:outline-none focus:ring-2 focus:ring-sipkbi-green bg-white dark:bg-gray-700">
+                        <input type="text" id="search-input" placeholder="Cari deskripsi atau keterangan..."
+                            class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10 w-64
+                                bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-sipkbi-green">
 
-                        <!-- Filter Status -->
-                        <select id="status-filter"
-                            class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10 focus:outline-none focus:ring-2 focus:ring-sipkbi-green bg-white dark:bg-gray-700">
-                            <option value="">Semua Status</option>
-                            <option value="aktif">Aktif</option>
-                            <option value="nonaktif">Non-Aktif</option>
+                        <!-- Filter Kategori -->
+                        <select id="filter-kategori"
+                            class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10
+                                bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-sipkbi-green">
+                            <option value="">Semua Kategori</option>
+                            <option value="pakan">Pakan</option>
+                            <option value="perawatan">Perawatan</option>
+                            <option value="operasional">Operasional</option>
+                            <option value="gaji">Gaji</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+
+                        <!-- Filter Nominal -->
+                        <select id="filter-nominal"
+                            class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 h-10
+                                bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-sipkbi-green">
+                            <option value="">Semua Nominal</option>
+                            <option value="high">Tertinggi</option>
+                            <option value="low">Terendah</option>
                         </select>
 
                         <!-- Search Button -->
@@ -255,7 +256,6 @@
                 </div>
             </div>
 
-
             <!-- Table -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden mr-6 ml-6">
                 <div class="overflow-x-auto">
@@ -263,11 +263,11 @@
                         <thead class="bg-sipkbi-green text-white">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-semibold uppercase">No</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Nama Kolam</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Lokasi</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Luas (m²)</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Kapasitas Ikan</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Tanggal</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Kategori</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Deskripsi</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Jumlah</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase">Keterangan</th>
                                 <th class="px-6 py-3 text-center text-xs font-semibold uppercase">Aksi</th>
                             </tr>
                         </thead>
@@ -276,7 +276,6 @@
                         </tbody>
                     </table>
                 </div>
-
                 <!-- Pagination Controls -->
                 <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
                     <div class="flex items-center justify-between">
@@ -296,17 +295,15 @@
             </div>
     </div>
     </main>
-    </div>
 
     <!-- Modal Form -->
     <div id="modal-root" class="fixed inset-0 z-50 hidden">
         <div id="modal-overlay" class="absolute inset-0 bg-black bg-opacity-50"></div>
-        <div id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"
-            class="modal-transition modal-hidden fixed inset-0 flex items-center justify-center p-4">
+        <div id="modal" class="modal-transition modal-hidden fixed inset-0 flex items-center justify-center p-4">
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 id="modal-title" class="text-2xl font-bold">Tambah Kolam</h2>
+                        <h2 id="modal-title" class="text-2xl font-bold">Tambah Pengeluaran</h2>
                         <button id="modal-close-btn"
                             class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -316,42 +313,46 @@
                         </button>
                     </div>
 
-                    <form id="kolam-form" class="space-y-4">
+                    <form id="pengeluaran-form" class="space-y-4">
                         <input type="hidden" id="id">
 
                         <div>
-                            <label class="block text-sm font-medium mb-2">Nama Kolam</label>
-                            <input type="text" id="nama_kolam" required
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-sipkbi-green focus:border-transparent">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium mb-2">Lokasi</label>
-                            <input type="text" id="lokasi" required
+                            <label class="block text-sm font-medium mb-2">Tanggal</label>
+                            <input type="date" id="tanggal" required
                                 class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-sipkbi-green focus:border-transparent">
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium mb-2">Luas (m²)</label>
-                                <input type="number" step="0.01" id="luas_m2" required
+                                <label class="block text-sm font-medium mb-2">Kategori</label>
+                                <select id="kategori" required
                                     class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-sipkbi-green focus:border-transparent">
+                                    <option value="">Pilih Kategori</option>
+                                    <option value="Pakan">Pakan</option>
+                                    <option value="Perawatan">Perawatan</option>
+                                    <option value="Operasional">Operasional</option>
+                                    <option value="Gaji">Gaji</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium mb-2">Kapasitas Ikan</label>
-                                <input type="number" id="kapasitas_ikan" required
+                                <label class="block text-sm font-medium mb-2">Jumlah (Rp)</label>
+                                <input type="number" step="0.01" id="jumlah" required
                                     class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-sipkbi-green focus:border-transparent">
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium mb-2">Status</label>
-                            <select id="status" required
+                            <label class="block text-sm font-medium mb-2">Deskripsi</label>
+                            <input type="text" id="deskripsi" required
                                 class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-sipkbi-green focus:border-transparent">
-                                <option value="aktif">Aktif</option>
-                                <option value="nonaktif">Non-aktif</option>
-                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Keterangan</label>
+                            <textarea id="keterangan" rows="3"
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-sipkbi-green focus:border-transparent"></textarea>
                         </div>
 
                         <div class="flex justify-end space-x-3 pt-4">
@@ -390,6 +391,9 @@
             const isDark = html.classList.contains('dark');
             toggle.textContent = isDark ? '🌙' : '🌞';
             localStorage.theme = isDark ? 'dark' : 'light';
+
+            // Update charts when theme changes
+            updateChartColors();
         });
 
         // Mobile Sidebar Toggle
@@ -413,30 +417,29 @@
             overlay.classList.add('hidden');
         });
 
-        // Modal Management
         const modalRoot = document.getElementById('modal-root');
         const modal = document.getElementById('modal');
         const modalTitle = document.getElementById('modal-title');
         const modalCloseBtn = document.getElementById('modal-close-btn');
         const modalCancelBtn = document.getElementById('modal-cancel-btn');
         const modalOverlay = document.getElementById('modal-overlay');
-        const kolamForm = document.getElementById('kolam-form');
+        const pengeluaranForm = document.getElementById('pengeluaran-form');
 
         let isEditMode = false;
 
         function openModal(mode, data = null) {
             isEditMode = mode === 'edit';
-            modalTitle.textContent = isEditMode ? 'Edit Kolam' : 'Tambah Kolam';
+            modalTitle.textContent = isEditMode ? 'Edit Pengeluaran' : 'Tambah Pengeluaran';
 
             if (isEditMode && data) {
                 document.getElementById('id').value = data.id;
-                document.getElementById('nama_kolam').value = data.nama_kolam;
-                document.getElementById('lokasi').value = data.lokasi;
-                document.getElementById('luas_m2').value = data.luas_m2;
-                document.getElementById('kapasitas_ikan').value = data.kapasitas_ikan;
-                document.getElementById('status').value = data.status;
+                document.getElementById('tanggal').value = data.tanggal;
+                document.getElementById('kategori').value = data.kategori;
+                document.getElementById('deskripsi').value = data.deskripsi;
+                document.getElementById('jumlah').value = data.jumlah;
+                document.getElementById('keterangan').value = data.keterangan || '';
             } else {
-                kolamForm.reset();
+                pengeluaranForm.reset();
                 document.getElementById('id').value = '';
             }
 
@@ -452,8 +455,8 @@
             modal.classList.add('modal-hidden');
             setTimeout(() => {
                 modalRoot.classList.add('hidden');
-                kolamForm.reset();
-            }, 200);
+                pengeluaranForm.reset();
+            }, 180);
         }
 
         modalCloseBtn.addEventListener('click', closeModal);
@@ -476,25 +479,24 @@
         let totalItems = 0;
         let allData = [];
 
-        // Load data kolam dengan filter dan search
-        async function loadKolam(search = '', status = '') {
+        async function loadPengeluaran(search = '', kategori = '', nominal = '') {
             try {
                 const params = new URLSearchParams();
 
+                // Search parameter
                 if (search) params.append('search', search);
-                if (status) params.append('status', status);
+
+                // Filter kategori
+                if (kategori) params.append('kategori', kategori);
+
+                // Filter nominal (high/low)
+                if (nominal) params.append('filter_nominal', nominal);
 
                 const queryString = params.toString();
-                const url = `/api/kolam${queryString ? '?' + queryString : ''}`;
+                const url = `/api/pengeluaran${queryString ? '?' + queryString : ''}`;
 
                 console.log('Loading data from:', url);
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
+                const response = await fetch(url);
 
                 if (!response.ok) throw new Error('Gagal memuat data');
 
@@ -506,13 +508,13 @@
                 currentPage = 1; // Reset ke halaman 1
                 
                 renderPaginatedData();
-
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('Gagal memuat data kolam', 'error');
+                showAlert('Gagal memuat data pengeluaran', 'error');
             }
         }
 
+        
         // Render data dengan pagination
         function renderPaginatedData() {
             const startIndex = (currentPage - 1) * itemsPerPage;
@@ -742,24 +744,27 @@
         // Apply filters (triggered by Cari button)
         function applyFilters() {
             const search = document.getElementById('search-input').value.trim();
-            const status = document.getElementById('status-filter').value;
+            const kategori = document.getElementById('filter-kategori').value;
+            const nominal = document.getElementById('filter-nominal').value;
 
-            loadKolam(search, status);
+            loadPengeluaran(search, kategori, nominal);
         }
 
         // Reset filters
         function resetFilters() {
             document.getElementById('search-input').value = '';
-            document.getElementById('status-filter').value = '';
-            loadKolam();
+            document.getElementById('filter-kategori').value = '';
+            document.getElementById('filter-nominal').value = '';
+            loadPengeluaran();
         }
 
-        // Handle filter change (auto filter untuk dropdown)
+        // Auto filter ketika dropdown berubah
         function onFilterChange() {
             const search = document.getElementById('search-input').value.trim();
-            const status = document.getElementById('status-filter').value;
+            const kategori = document.getElementById('filter-kategori').value;
+            const nominal = document.getElementById('filter-nominal').value;
 
-            loadKolam(search, status);
+            loadPengeluaran(search, kategori, nominal);
         }
 
         // Event listener untuk Enter key pada search input
@@ -769,77 +774,72 @@
             }
         });
 
-        // Event listener untuk status filter (auto filter)
-        document.getElementById('status-filter').addEventListener('change', onFilterChange);
+        // Event listeners untuk filter dropdown (auto filter)
+        document.getElementById('filter-kategori').addEventListener('change', onFilterChange);
+        document.getElementById('filter-nominal').addEventListener('change', onFilterChange);
 
-        // Render Table
         function renderTable(data, startIndex = 0) {
             const tbody = document.getElementById('table-body');
 
             if (data.length === 0) {
                 tbody.innerHTML = `
-            <tr>
-                <td colspan="7" class="px-6 py-8 text-center text-gray-500">
-                    Belum ada data kolam
-                </td>
-            </tr>
-        `;
+                    <tr>
+                        <td colspan="7" class="px-6 py-8 text-center text-gray-500">
+                            Belum ada data pengeluaran
+                        </td>
+                    </tr>
+                `;
                 return;
             }
 
             tbody.innerHTML = data.map((item, index) => `
-        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-            <td class="px-6 py-4 text-sm">${startIndex + index + 1}</td>
-            <td class="px-6 py-4 text-sm font-medium">${item.nama_kolam}</td>
-            <td class="px-6 py-4 text-sm">${item.lokasi}</td>
-            <td class="px-6 py-4 text-sm">${parseFloat(item.luas_m2).toLocaleString('id-ID')}</td>
-            <td class="px-6 py-4 text-sm">${parseInt(item.kapasitas_ikan).toLocaleString('id-ID')}</td>
-            <td class="px-6 py-4">
-                <span class="px-3 py-1 text-xs font-semibold rounded-full ${
-                    item.status === 'aktif'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100'
-                        : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                }">
-                    ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}
-                </span>
-            </td>
-            <td class="px-6 py-4 text-center">
-                <div class="flex justify-center space-x-2">
-                    <button onclick='editKolam(${JSON.stringify(item)})' class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" title="Edit">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                        </svg>
-                    </button>
-                    <button onclick="deleteKolam(${item.id})" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300" title="Hapus">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                        </svg>
-                    </button>
-                </div>
-            </td>
-        </tr>
-    `).join('');
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <td class="px-6 py-4 text-sm">${startIndex + index + 1}</td>
+                    <td class="px-6 py-4 text-sm">${new Date(item.tanggal).toLocaleDateString('id-ID')}</td>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100">
+                            ${item.kategori}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm">${item.deskripsi}</td>
+                    <td class="px-6 py-4 text-sm font-semibold text-red-600">Rp ${parseFloat(item.jumlah).toLocaleString('id-ID')}</td>
+                    <td class="px-6 py-4 text-sm">${item.keterangan || '-'}</td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex justify-center space-x-2">
+                            <button onclick='editPengeluaran(${JSON.stringify(item)})' class="text-blue-600 hover:text-blue-800" title="Edit">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </button>
+                            <button onclick="deletePengeluaran(${item.id})" class="text-red-600 hover:text-red-800" title="Hapus">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
         }
 
-        // Submit Form
-        kolamForm.addEventListener('submit', async (e) => {
+        pengeluaranForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const formData = {
-                nama_kolam: document.getElementById('nama_kolam').value,
-                lokasi: document.getElementById('lokasi').value,
-                luas_m2: document.getElementById('luas_m2').value,
-                kapasitas_ikan: document.getElementById('kapasitas_ikan').value,
-                status: document.getElementById('status').value
+                tanggal: document.getElementById('tanggal').value,
+                kategori: document.getElementById('kategori').value,
+                deskripsi: document.getElementById('deskripsi').value,
+                jumlah: document.getElementById('jumlah').value,
+                keterangan: document.getElementById('keterangan').value
             };
 
             try {
-                let url = '/api/kolam';
+                let url = '/api/pengeluaran';
                 let method = 'POST';
 
                 if (isEditMode) {
                     const id = document.getElementById('id').value;
-                    url = `/api/kolam/${id}`;
+                    url = `/api/pengeluaran/${id}`;
                     method = 'PUT';
                 }
 
@@ -861,26 +861,24 @@
 
                 showAlert(result.message || 'Data berhasil disimpan', 'success');
                 closeModal();
-                loadKolam();
+                loadPengeluaran();
             } catch (error) {
                 console.error('Error:', error);
                 showAlert(error.message || 'Gagal menyimpan data', 'error');
             }
         });
 
-        // Edit Kolam
-        function editKolam(data) {
+        function editPengeluaran(data) {
             openModal('edit', data);
         }
 
-        // Delete Kolam
-        async function deleteKolam(id) {
-            if (!confirm('Apakah Anda yakin ingin menghapus data kolam ini?')) {
+        async function deletePengeluaran(id) {
+            if (!confirm('Apakah Anda yakin ingin menghapus data pengeluaran ini?')) {
                 return;
             }
 
             try {
-                const response = await fetch(`/api/kolam/${id}`, {
+                const response = await fetch(`/api/pengeluaran/${id}`, {
                     method: 'DELETE',
                     headers: {
                         'Accept': 'application/json',
@@ -896,14 +894,13 @@
                 }
 
                 showAlert(result.message || 'Data berhasil dihapus', 'success');
-                loadKolam();
+                loadPengeluaran();
             } catch (error) {
                 console.error('Error:', error);
                 showAlert(error.message || 'Gagal menghapus data', 'error');
             }
         }
 
-        // Show Alert
         function showAlert(message, type = 'info') {
             const alertDiv = document.createElement('div');
             const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
@@ -920,9 +917,8 @@
             }, 3000);
         }
 
-        // Load data on page load
         document.addEventListener('DOMContentLoaded', () => {
-            loadKolam();
+            loadPengeluaran();
         });
     </script>
 </body>

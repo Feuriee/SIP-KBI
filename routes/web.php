@@ -105,6 +105,10 @@ Route::middleware(['auth', 'verified', 'user'])->prefix('user')->name('user.')->
         return view('user.biayaOperasional');
     })->name('biaya');
 
+    Route::get('/pengeluaran', function () {
+        return view('user.pengeluaran');
+    })->name('pengeluaran');
+
     Route::get('/penjualan', function () {
         return view('user.penjualan');
     })->name('penjualan');
@@ -129,15 +133,6 @@ Route::middleware(['auth', 'verified', 'user'])->prefix('user')->name('user.')->
     Route::get('/panen', function () {
         return view('user.panen');
     })->name('panen');
-
-    // SDM Routes
-    Route::get('/pegawai', function () {
-        return view('user.pegawai');
-    })->name('pegawai');
-
-    Route::get('/gaji', function () {
-        return view('user.gajiKaryawan');
-    })->name('gaji');
 
     // Dokumen Routes
     Route::prefix('dokumen')->name('dokumen.')->group(function () {

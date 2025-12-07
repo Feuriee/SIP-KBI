@@ -62,6 +62,14 @@
                             </svg>
                             Biaya Operasional
                         </a>
+                        <a href="{{ route('user.pengeluaran') }}"
+                            class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 {{ request()->routeIs('user.pengeluaran') ? 'bg-sipkbi-green text-white' : 'hover:bg-sipkbi-green hover:text-white' }} transition">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                            Pengeluaran
+                        </a>
                         <a href="{{ route('user.penjualan') }}" class="nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-1 hover:bg-sipkbi-green hover:text-white transition">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -179,7 +187,7 @@
                             </div>
                         </div>
                         <h3 class="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Penjualan</h3>
-                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($totalPenjualan / 1000000, 1) }}<span class="text-base font-normal">M</span></p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($totalPenjualan / 1000000, 1) }} <span class="text-base font-normal">Juta</span></p>
                         <p class="text-xs text-green-600 mt-2">↑ Data keseluruhan</p>
                     </div>
 
@@ -193,7 +201,7 @@
                             </div>
                         </div>
                         <h3 class="text-sm text-gray-600 dark:text-gray-400 mb-1">Pendapatan</h3>
-                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($totalPendapatan / 1000000, 1) }}<span class="text-base font-normal">M</span></p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($totalPendapatan / 1000000, 1) }} <span class="text-base font-normal">Juta</span></p>
                         <p class="text-xs text-green-600 mt-2">↑ Data keseluruhan</p>
                     </div>
 
@@ -207,7 +215,7 @@
                             </div>
                         </div>
                         <h3 class="text-sm text-gray-600 dark:text-gray-400 mb-1">Pengeluaran</h3>
-                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($totalPengeluaran / 1000000, 1) }}<span class="text-base font-normal">M</span></p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($totalPengeluaran / 1000000, 1) }} <span class="text-base font-normal">Juta</span></p>
                         <p class="text-xs text-red-600 mt-2">↑ Data keseluruhan</p>
                     </div>
 
@@ -221,7 +229,7 @@
                             </div>
                         </div>
                         <h3 class="text-sm text-gray-600 dark:text-gray-400 mb-1">Laba Bersih</h3>
-                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($labaBersih / 1000000, 1) }}<span class="text-base font-normal">M</span></p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($labaBersih / 1000000, 1) }} <span class="text-base font-normal">Juta</span></p>
                         <p class="text-xs text-{{ $labaBersih >= 0 ? 'green' : 'red' }}-600 mt-2">{{ $labaBersih >= 0 ? '↑' : '↓' }} Data keseluruhan</p>
                     </div>
                 </div>

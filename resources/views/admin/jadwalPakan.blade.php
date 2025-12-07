@@ -285,6 +285,22 @@
                             </tbody>
                         </table>
                     </div>
+                    <!-- Pagination Controls -->
+                    <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center justify-between">
+                            <!-- Info halaman -->
+                            <div class="text-sm text-gray-700 dark:text-gray-300">
+                                Menampilkan <span id="showing-start" class="font-semibold">0</span> sampai 
+                                <span id="showing-end" class="font-semibold">0</span> dari 
+                                <span id="total-data" class="font-semibold">0</span> data
+                            </div>
+
+                            <!-- Pagination buttons -->
+                            <div class="flex space-x-2" id="pagination-controls">
+                                <!-- Buttons akan di-generate di sini -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -339,6 +355,12 @@
                 return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
             }
 
+            // Pagination State
+            let currentPage = 1;
+            let itemsPerPage = 10;
+            let totalItems = 0;
+            let allData = [];
+        
             async function loadKolam() {
                 try {
                     const response = await fetch('/api/kolam');
@@ -392,13 +414,243 @@
                     const result = await response.json();
                     console.log('API Response:', result);
 
-                    const data = result.data || [];
-                    renderTable(data);
+                    allData = result.data || [];
+                    totalItems = allData.length;
+                    currentPage = 1; // Reset ke halaman 1
+                    
+                    renderPaginatedData();
                 } catch (error) {
                     console.error('Error:', error);
                     showAlert('Gagal memuat data jadwal pakan', 'error');
                 }
             }
+
+            
+        // Render data dengan pagination
+        function renderPaginatedData() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedData = allData.slice(startIndex, endIndex);
+            
+            renderTable(paginatedData, startIndex);
+            updatePaginationInfo();
+            renderPaginationControls();
+        }
+
+        // Update info pagination
+        function updatePaginationInfo() {
+            const startIndex = (currentPage - 1) * itemsPerPage + 1;
+            const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
+            
+            document.getElementById('showing-start').textContent = totalItems > 0 ? startIndex : 0;
+            document.getElementById('showing-end').textContent = endIndex;
+            document.getElementById('total-data').textContent = totalItems;
+        }
+
+        // Render pagination controls
+        function renderPaginationControls() {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const paginationControls = document.getElementById('pagination-controls');
+            
+            if (totalPages <= 1) {
+                paginationControls.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            
+            // Previous button
+            html += `
+                <button onclick="changePage(${currentPage - 1})" 
+                    ${currentPage === 1 ? 'disabled' : ''}
+                    class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                    ‹ Prev
+                </button>
+            `;
+            
+            // Page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            // First page
+            if (startPage > 1) {
+                html += `
+                    <button onclick="changePage(1)" 
+                        class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
+                        1
+                    </button>
+                `;
+                if (startPage > 2) {
+                    html += `<span class="px-2 py-1 text-sm">...</span>`;
+                }
+            }
+            
+            // Page numbers
+            for (let i = startPage; i <= endPage; i++) {
+                html += `
+                    <button onclick="changePage(${i})" 
+                        class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                            i === currentPage ? 'bg-sipkbi-green text-white hover:bg-sipkbi-dark' : ''
+                        }">
+                        ${i}
+                    </button>
+                `;
+            }
+            
+            // Last page
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    html += `<span class="px-2 py-1 text-sm">...</span>`;
+                }
+                html += `
+                    <button onclick="changePage(${totalPages})" 
+                        class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
+                        ${totalPages}
+                    </button>
+                `;
+            }
+            
+            // Next button
+            html += `
+                <button onclick="changePage(${currentPage + 1})" 
+                    ${currentPage === totalPages ? 'disabled' : ''}
+                    class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Next ›
+                </button>
+            `;
+            
+            paginationControls.innerHTML = html;
+        }
+
+        // Change page
+        function changePage(page) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            renderPaginatedData();
+            
+            // Scroll to top of table
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Render data dengan pagination
+        function renderPaginatedData() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedData = allData.slice(startIndex, endIndex);
+            
+            renderTable(paginatedData, startIndex);
+            updatePaginationInfo();
+            renderPaginationControls();
+        }
+
+        // Update info pagination
+        function updatePaginationInfo() {
+            const startIndex = (currentPage - 1) * itemsPerPage + 1;
+            const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
+            
+            document.getElementById('showing-start').textContent = totalItems > 0 ? startIndex : 0;
+            document.getElementById('showing-end').textContent = endIndex;
+            document.getElementById('total-data').textContent = totalItems;
+        }
+
+        // Render pagination controls
+        function renderPaginationControls() {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const paginationControls = document.getElementById('pagination-controls');
+            
+            if (totalPages <= 1) {
+                paginationControls.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            
+            // Previous button
+            html += `
+                <button onclick="changePage(${currentPage - 1})" 
+                    ${currentPage === 1 ? 'disabled' : ''}
+                    class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                    ‹ Prev
+                </button>
+            `;
+            
+            // Page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            // First page
+            if (startPage > 1) {
+                html += `
+                    <button onclick="changePage(1)" 
+                        class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
+                        1
+                    </button>
+                `;
+                if (startPage > 2) {
+                    html += `<span class="px-2 py-1 text-sm">...</span>`;
+                }
+            }
+            
+            // Page numbers
+            for (let i = startPage; i <= endPage; i++) {
+                html += `
+                    <button onclick="changePage(${i})" 
+                        class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                            i === currentPage ? 'bg-sipkbi-green text-white hover:bg-sipkbi-dark' : ''
+                        }">
+                        ${i}
+                    </button>
+                `;
+            }
+            
+            // Last page
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    html += `<span class="px-2 py-1 text-sm">...</span>`;
+                }
+                html += `
+                    <button onclick="changePage(${totalPages})" 
+                        class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
+                        ${totalPages}
+                    </button>
+                `;
+            }
+            
+            // Next button
+            html += `
+                <button onclick="changePage(${currentPage + 1})" 
+                    ${currentPage === totalPages ? 'disabled' : ''}
+                    class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Next ›
+                </button>
+            `;
+            
+            paginationControls.innerHTML = html;
+        }
+
+        // Change page
+        function changePage(page) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            renderPaginatedData();
+            
+            // Scroll to top of table
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
             // Apply filters (digunakan internal)
             function applyFilters() {
@@ -438,7 +690,7 @@
 
             document.getElementById('status-filter').addEventListener('change', onBeratFilterChange);
 
-            function renderTable(data) {
+            function renderTable(data, startIndex) {
                 const tbody = document.getElementById('table-body');
 
                 if (data.length === 0) {
@@ -458,7 +710,7 @@
 
                     return `
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                    <td class="px-6 py-4 text-sm">${index + 1}</td>
+                    <td class="px-6 py-4 text-sm">${startIndex + index + 1}</td>
                     <td class="px-6 py-4 text-sm font-medium">${kolam ? kolam.nama_kolam : '-'}</td>
                     <td class="px-6 py-4 text-sm">${pakan ? pakan.nama_pakan : '-'}</td>
                     <td class="px-6 py-4 text-sm">${new Date(item.tanggal).toLocaleDateString('id-ID')}</td>
