@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BiayaOperasional;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class BiayaOperasionalController extends Controller
 {
@@ -95,12 +96,28 @@ class BiayaOperasionalController extends Controller
     {
         try {
             $validated = $request->validate([
-                'bulan' => 'required|date',
+                'bulan' => 'required|string',
                 'listrik' => 'required|numeric|min:0',
                 'air' => 'required|numeric|min:0',
                 'transportasi' => 'required|numeric|min:0',
                 'lainnya' => 'required|numeric|min:0'
             ]);
+
+            // PERBAIKAN: Konversi format bulan YYYY-MM menjadi tanggal lengkap YYYY-MM-01
+            if (preg_match('/^\d{4}-\d{2}$/', $validated['bulan'])) {
+                $validated['bulan'] = $validated['bulan'] . '-01';
+            }
+
+            // Validasi format tanggal
+            try {
+                $tanggal = Carbon::parse($validated['bulan']);
+                $validated['bulan'] = $tanggal->format('Y-m-d');
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Format tanggal tidak valid'
+                ], 422);
+            }
 
             // Hitung total biaya otomatis
             $validated['total_biaya'] = $validated['listrik'] +
@@ -139,12 +156,28 @@ class BiayaOperasionalController extends Controller
             $biayaOperasional = BiayaOperasional::findOrFail($id);
 
             $validated = $request->validate([
-                'bulan' => 'required|date',
+                'bulan' => 'required|string',
                 'listrik' => 'required|numeric|min:0',
                 'air' => 'required|numeric|min:0',
                 'transportasi' => 'required|numeric|min:0',
                 'lainnya' => 'required|numeric|min:0'
             ]);
+
+            // PERBAIKAN: Konversi format bulan YYYY-MM menjadi tanggal lengkap YYYY-MM-01
+            if (preg_match('/^\d{4}-\d{2}$/', $validated['bulan'])) {
+                $validated['bulan'] = $validated['bulan'] . '-01';
+            }
+
+            // Validasi format tanggal
+            try {
+                $tanggal = Carbon::parse($validated['bulan']);
+                $validated['bulan'] = $tanggal->format('Y-m-d');
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Format tanggal tidak valid'
+                ], 422);
+            }
 
             // Hitung total biaya otomatis
             $validated['total_biaya'] = $validated['listrik'] +

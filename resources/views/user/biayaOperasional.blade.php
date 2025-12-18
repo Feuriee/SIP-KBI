@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -304,6 +305,16 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <!-- Export to Excel Button -->
+                <div class="mt-4 flex justify-end">
+                    <button onclick="exportToExcel()"
+                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm flex items-center gap-2 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Export Excel
+                    </button>
                 </div>
             </div>
         </main>
@@ -648,6 +659,61 @@
             `;
             
             paginationControls.innerHTML = html;
+        }
+
+        // Export to Excel Function
+        function exportToExcel() {
+            try {
+                if (allData.length === 0) {
+                    showAlert('Tidak ada data untuk diekspor', 'error');
+                    return;
+                }
+
+                // Persiapkan data untuk Excel
+                const excelData = allData.map((item, index) => {
+                    const bulanDate = new Date(item.bulan);
+
+                    return {
+                        'No': index + 1,
+                        'Bulan': bulanDate.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }),
+                        'Listrik (Rp)': parseFloat(item.listrik),
+                        'Air (Rp)': parseFloat(item.air),
+                        'Transportasi (Rp)': parseFloat(item.transportasi),
+                        'Lainnya (Rp)': parseFloat(item.lainnya),
+                        'Total Biaya (Rp)': parseFloat(item.total_biaya)
+                    };
+                });
+
+                // Buat worksheet
+                const ws = XLSX.utils.json_to_sheet(excelData);
+
+                // Set column widths
+                ws['!cols'] = [
+                    { wch: 5 },  // No
+                    { wch: 20 }, // Bulan
+                    { wch: 18 }, // Listrik
+                    { wch: 18 }, // Air
+                    { wch: 20 }, // Transportasi
+                    { wch: 18 }, // Lainnya
+                    { wch: 20 }  // Total Biaya
+                ];
+
+                // Buat workbook
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Biaya Operasional');
+
+                // Generate filename dengan tanggal
+                const date = new Date();
+                const filename = `Biaya_Operasional_${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}.xlsx`;
+
+                // Download file
+                XLSX.writeFile(wb, filename);
+
+                showAlert('Data berhasil diekspor ke Excel', 'success');
+            } catch (error) {
+                console.error('Error exporting to Excel:', error);
+                showAlert('Gagal mengekspor data ke Excel', 'error');
+            }
         }
 
         // Change page

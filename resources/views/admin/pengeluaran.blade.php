@@ -323,7 +323,6 @@
                     </div>
                 </div>
             </div>
-    </div>
     </main>
 
     <!-- Modal Form -->

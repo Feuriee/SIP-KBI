@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -274,6 +275,16 @@
                     </div>
                 </div>
             </div>
+                <!-- Export to Excel Button -->
+                <div class="mr-6 mt-4 flex justify-end">
+                    <button onclick="exportToExcel()"
+                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm flex items-center gap-2 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Export Excel
+                    </button>
+                </div>
     </div>
     </main>
 
@@ -643,6 +654,73 @@
             `;
             
             paginationControls.innerHTML = html;
+        }
+        
+        // Export to Excel Function untuk Penjualan
+        function exportToExcel() {
+            try {
+                if (allData.length === 0) {
+                    showAlert('Tidak ada data untuk diekspor', 'error');
+                    return;
+                }
+
+                // Persiapkan data untuk Excel
+                const excelData = allData.map((item, index) => {
+                    const tanggalJual = new Date(item.tanggal_jual);
+                    
+                    // Get info panen jika ada relasi
+                    const kolamInfo = item.panen?.kolam?.nama_kolam || '-';
+                    const jenisIkanInfo = item.panen?.jenis_ikan?.nama || '-';
+
+                    return {
+                        'No': index + 1,
+                        'Tanggal Jual': tanggalJual.toLocaleDateString('id-ID', { 
+                            day: '2-digit',
+                            month: 'long', 
+                            year: 'numeric' 
+                        }),
+                        'Kolam': kolamInfo,
+                        'Jenis Ikan': jenisIkanInfo,
+                        'Pembeli': item.pembeli,
+                        'Jumlah (Kg)': parseFloat(item.jumlah_kg),
+                        'Harga per Kg (Rp)': parseFloat(item.harga_per_kg),
+                        'Total Jual (Rp)': parseFloat(item.total_jual),
+                        'Metode Bayar': item.metode_bayar
+                    };
+                });
+
+                // Buat worksheet
+                const ws = XLSX.utils.json_to_sheet(excelData);
+
+                // Set column widths
+                ws['!cols'] = [
+                    { wch: 5 },  // No
+                    { wch: 20 }, // Tanggal Jual
+                    { wch: 15 }, // Kolam
+                    { wch: 20 }, // Jenis Ikan
+                    { wch: 25 }, // Pembeli
+                    { wch: 15 }, // Jumlah
+                    { wch: 18 }, // Harga per Kg
+                    { wch: 18 }, // Total Jual
+                    { wch: 15 }  // Metode Bayar
+                ];
+
+                // Buat workbook
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Data Penjualan');
+
+                // Generate filename dengan tanggal
+                const date = new Date();
+                const filename = `Data_Penjualan_${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}.xlsx`;
+
+                // Download file
+                XLSX.writeFile(wb, filename);
+
+                showAlert('Data berhasil diekspor ke Excel', 'success');
+            } catch (error) {
+                console.error('Error exporting to Excel:', error);
+                showAlert('Gagal mengekspor data ke Excel', 'error');
+            }
         }
 
         // Change page

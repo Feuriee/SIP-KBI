@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LaporanKeuangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class LaporanKeuanganController extends Controller
 {
@@ -121,11 +122,27 @@ class LaporanKeuanganController extends Controller
     {
         try {
             $validated = $request->validate([
-                'bulan' => 'required|date',
+                'bulan' => 'required|string',
                 'total_pendapatan' => 'required|numeric|min:0',
                 'total_pengeluaran' => 'required|numeric|min:0',
                 'catatan' => 'nullable|string'
             ]);
+
+            // PERBAIKAN: Konversi format bulan YYYY-MM menjadi tanggal lengkap YYYY-MM-01
+            if (preg_match('/^\d{4}-\d{2}$/', $validated['bulan'])) {
+                $validated['bulan'] = $validated['bulan'] . '-01';
+            }
+
+            // Validasi format tanggal
+            try {
+                $tanggal = Carbon::parse($validated['bulan']);
+                $validated['bulan'] = $tanggal->format('Y-m-d');
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Format tanggal tidak valid'
+                ], 422);
+            }
 
             // Hitung laba bersih otomatis
             $validated['laba_bersih'] = $validated['total_pendapatan'] - $validated['total_pengeluaran'];
@@ -161,11 +178,27 @@ class LaporanKeuanganController extends Controller
             $laporanKeuangan = LaporanKeuangan::findOrFail($id);
 
             $validated = $request->validate([
-                'bulan' => 'required|date',
+                'bulan' => 'required|string',
                 'total_pendapatan' => 'required|numeric|min:0',
                 'total_pengeluaran' => 'required|numeric|min:0',
                 'catatan' => 'nullable|string'
             ]);
+
+            // PERBAIKAN: Konversi format bulan YYYY-MM menjadi tanggal lengkap YYYY-MM-01
+            if (preg_match('/^\d{4}-\d{2}$/', $validated['bulan'])) {
+                $validated['bulan'] = $validated['bulan'] . '-01';
+            }
+
+            // Validasi format tanggal
+            try {
+                $tanggal = Carbon::parse($validated['bulan']);
+                $validated['bulan'] = $tanggal->format('Y-m-d');
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Format tanggal tidak valid'
+                ], 422);
+            }
 
             // Hitung laba bersih otomatis
             $validated['laba_bersih'] = $validated['total_pendapatan'] - $validated['total_pengeluaran'];
