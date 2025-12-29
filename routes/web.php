@@ -6,7 +6,6 @@ use App\Http\Controllers\User\DashboardController as UserDashboard;
 use App\Http\Controllers\Dokumen\DokumenController;
 use Illuminate\Support\Facades\Route;
 
-// Import API Controllers
 use App\Http\Controllers\Api\KolamController;
 use App\Http\Controllers\Api\PakanController;
 use App\Http\Controllers\Api\JadwalPakanController;
@@ -24,7 +23,6 @@ Route::get('/', function () {
     return view('main.welcome');
 });
 
-// Redirect setelah login berdasarkan role
 Route::get('/dashboard', function () {
     if (auth()->user()->isAdmin()) {
         return redirect()->route('admin.dashboard');
@@ -36,7 +34,6 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
 
-    // ⚠️ PERBAIKAN: Graph routes dipindahkan ke sini dan menggunakan AdminDashboard
     Route::get('/dashboard/chart-data', [AdminDashboard::class, 'getChartData'])->name('dashboard.chart');
     Route::get('/dashboard/panen-chart', [AdminDashboard::class, 'getPanenChart'])->name('dashboard.panen');
 
